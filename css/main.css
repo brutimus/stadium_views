@@ -1,0 +1,105 @@
+@import "../bower_components/normalize-css/normalize.css";
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600);
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  width: 350px;
+}
+.container {
+  padding: 10px;
+}
+#seat-selector select {
+  width: 100%;
+}
+#seat-selector input {
+  display: block;
+  color: white;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#007aff+0,0077ff+100 */
+  background: #007aff;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #007aff 0%, #0077ff 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #007aff), color-stop(100%, #0077ff));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #007aff 0%, #0077ff 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #007aff 0%, #0077ff 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #007aff 0%, #0077ff 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #007aff 0%, #0077ff 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#007aff', endColorstr='#0077ff', GradientType=0);
+  /* IE6-9 */
+  border: 1px solid #0166ff;
+  border-radius: 3px;
+  width: 100%;
+  height: 35px;
+  margin-top: 10px;
+}
+#content-background {
+  fill: #ffffff;
+}
+.container {
+  position: relative;
+}
+.container .canvas {
+  width: 100%;
+  height: 400px;
+}
+.container .section-view-panel {
+  width: 100%;
+  height: 600px;
+  background-color: #cd1634;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 30px 10px 10px 10px;
+}
+.container .section-view-panel .close-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  color: white;
+  cursor: pointer;
+}
+.container .section-view-panel .section-details {
+  color: white;
+}
+.container .section-view-panel .section-details .photo {
+  max-width: 100%;
+}
+.container .section-view-panel .section-details .lower-left {
+  display: block;
+  width: 130px;
+  float: left;
+  margin-top: 10px;
+}
+.container .section-view-panel .section-details .lower-left .title {
+  display: block;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.container .section-view-panel .section-details .lower-left .sharing .share-title {
+  font-size: .8em;
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+.container .section-view-panel .section-details .lower-left .sharing .facebook,
+.container .section-view-panel .section-details .lower-left .sharing .twitter,
+.container .section-view-panel .section-details .lower-left .sharing .email {
+  font-size: .9em;
+  text-transform: uppercase;
+  font-weight: 200;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  display: block;
+  padding: 5px 0;
+}
+.container .section-view-panel .section-details .lower-right {
+  display: block;
+  float: left;
+  margin-top: 10px;
+}
