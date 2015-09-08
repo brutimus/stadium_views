@@ -6,6 +6,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#cd1634">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="stylesheet" href="css/main.css">
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,800' rel='stylesheet' type='text/css'>
@@ -26,21 +27,47 @@
             </div>
             <svg class="canvas"></svg>
             <div class="section-view-panel">
-                <span class="close-button">X</span>
+                <span class="close-button">
+                    <i class="icon-close"></i>
+                </span>
                 <div class="section-details">
                     <img class="photo" src="">
-                    <div class="lower-left">
-                        <span class="title"></span>
-                        <div class="sharing">
-                            <span class="share-title">Share this seat view</span>
-                            <span class="facebook">Facebook</span>
-                            <span class="twitter">Twitter</span>
-                            <span class="email">Email</span>
-                        </div>
-                    </div>
-                    <div class="lower-right">
-                        <img class="diagram" src="../img/sections/angels_SEC101.png">
-                    </div>
+                    <table>
+                        <tr>
+                            <td class="lower-left">
+                                <span class="title"></span>
+                                <div class="sharing">
+                                    <span class="share-title">Share this seat view</span>
+                                    <a href="#" rel="nofollow" class="facebook"><i class="icon-facebook"></i>Facebook</a>
+                                    <a href="#" rel="nofollow" class="twitter"><i class="icon-twitter"></i>Twitter</a>
+                                    <a href="mailto:?subject=" rel="nofollow" class="email"><i class="icon-mail"></i>Email</a>
+                                </div>
+                            </td>
+                            <td class="lower-right">
+                                <div class="diagram">
+                                    <img src="../img/sections/angels_SEC101.png">
+                                    <div class="viewSelector">
+                                        <div class="threeBy">
+                                            <div class="lm"></div>
+                                            <div class="mm"></div>
+                                            <div class="tm"></div>
+                                        </div>
+                                        <div class="nineBy">
+                                            <div class="ll"></div>
+                                            <div class="lm"></div>
+                                            <div class="lr"></div>
+                                            <div class="ml"></div>
+                                            <div class="mm"></div>
+                                            <div class="mr"></div>
+                                            <div class="tl"></div>
+                                            <div class="tm"></div>
+                                            <div class="tr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

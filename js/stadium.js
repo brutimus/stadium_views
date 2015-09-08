@@ -15,7 +15,13 @@ if (!String.prototype.format) {
 function stadium() {
     var diagram_url = '../img/sections/angels_SEC{0}.png',
         photo_url = '../img/photos/{0}/{1}{2}.jpg',
-        sections = [];
+        sections = [],
+        threeBySections = [
+            201,202,203,204,205,206,207,208,209,210,211,212,213,221,222,223,
+            224,225,226,227,228,229,230,231,232,233,236,240,241,242,243,244,
+            249,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,
+            316,317,318,319,320,321,322,330,331,332,333,334,335,336,337,338,
+            339,340,341,342,343,344,345,346,347,348];
 
     function my(selection) {
 
@@ -35,6 +41,11 @@ function stadium() {
                 view_section(e.target[0].value);
             })
             section_view_panel.select('.close-button').on('click', close_section);
+            section_view_panel.selectAll('.viewSelector > div > div').on('click', function(){
+                var e = d3.event;
+                e.preventDefault();
+                activate_photo_view(d3.select(e.target).attr('class').split(' ')[0]);
+            })
         }
 
         function load_image(data){
@@ -65,12 +76,31 @@ function stadium() {
                 .text(function(d){return d});
         }
 
+        function activate_photo(number, view) {
+            section_view_panel.select('.photo').attr(
+                'src', photo_url.format(Math.floor(number / 100) * 100, number, view));
+            section_view_panel.selectAll('.viewSelector > div > .active').classed('active', false);
+            section_view_panel.selectAll('.viewSelector > div > .' + view).classed('active', true);
+        }
+
+        function activate_photo_view(view){
+            var number = parseInt(container.select('#seat-selector #section').node().value);
+            activate_photo(number, view);
+        }
+
         function view_section(number){
-            // console.log(sections)
-            section_view_panel.select('.photo').attr('src', photo_url.format(Math.floor(number / 100) * 100, number, 'mm'))
+            var number = parseInt(number);
+            activate_photo(number, 'mm');
             section_view_panel.select('.diagram').attr('src', diagram_url.format(number));
-            section_view_panel.select('.title').text('Section ' + number)
+            section_view_panel.select('.title').text('Section ' + number);
+            section_view_panel.selectAll('.viewSelector > div').classed('active', false);
+            if (threeBySections.indexOf(number) > -1) {
+                section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
+            } else {
+                section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
+            };
             section_view_panel.style('display', 'block');
+            jQuery('.viewSelector > div').css('height', jQuery('.diagram img').height() + 'px');
         }
 
         function close_section(){
