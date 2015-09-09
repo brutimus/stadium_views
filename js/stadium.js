@@ -45,7 +45,8 @@ function stadium() {
                 var e = d3.event;
                 e.preventDefault();
                 activate_photo_view(d3.select(e.target).attr('class').split(' ')[0]);
-            })
+            });
+            read_url_hash();
         }
 
         function load_image(data){
@@ -81,11 +82,27 @@ function stadium() {
                 'src', photo_url.format(Math.floor(number / 100) * 100, number, view));
             section_view_panel.selectAll('.viewSelector > div > .active').classed('active', false);
             section_view_panel.selectAll('.viewSelector > div > .' + view).classed('active', true);
+            write_url_hash(number, view);
         }
 
         function activate_photo_view(view){
             var number = parseInt(container.select('#seat-selector #section').node().value);
             activate_photo(number, view);
+        }
+
+        function read_url_hash(){
+            var hash = window.location.hash;
+            console.log(hash)
+            if (hash.length == 6) {
+                var section = parseInt(hash.substring(1, 4)),
+                    view = hash.substring(4);
+                container.select('#seat-selector #section').node().value = section;
+                view_section(section);
+                activate_photo(section, view);
+            };
+        }
+        function write_url_hash(section, view){
+            window.location.hash = section + view;
         }
 
         function view_section(number){
@@ -100,11 +117,12 @@ function stadium() {
                 section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
             };
             section_view_panel.style('display', 'block');
-            jQuery('.viewSelector > div').css('height', jQuery('.diagram img').height() + 'px');
+            jQuery('.viewSelector > div').css('height', jQuery('.diagram img').width() + 'px');
         }
 
         function close_section(){
             section_view_panel.style('display', 'none');
+            window.location.hash = '';
         }
 
 
