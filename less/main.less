@@ -156,7 +156,7 @@ body {
 
 #seat-selector {
 	select {
-		width: 100%;
+		width: 30%;
 	}
 	input {
 		display: block;
@@ -277,7 +277,7 @@ body {
 				.viewSelector {
 					width: 100%;
 					position: absolute;
-					top: 0;
+					top: 32px;
 					left: 0;
 
 					.threeBy, .nineBy {
@@ -289,20 +289,21 @@ body {
 						display: block;
 					}
 					.threeBy > div, .nineBy > div {
-						background-color: white;
+						background-color: rgba(0,0,0,.2);
 						box-sizing: border-box;
-						border: 1px solid black;
+						border-radius: 100%;
 						height: 33%;
+						width: 33%;
 						float: left;
 					}
 					.threeBy > div.active, .nineBy > div.active {
-						background-color: red;
+						background-color: rgba(0,0,0,.6);
 					}
 					.threeBy > div {
-						width: 100%;
+						clear: both;
+						margin-left: 33%;
 					}
 					.nineBy > div {
-						width: 33%;
 					}
 				}
 			}
