@@ -116,7 +116,7 @@ function stadium() {
                     $(this).attr('fill', $(this).attr('orig-fill'));
                 }).on('click', function(d){
                     container.select('#seat-selector #section').node().value = parseInt(section_number);
-                    view_section(section_number);
+                    view_section(section_number, 'a', 1);
                 });
             });
             container.select('#seat-selector #section')
@@ -142,11 +142,10 @@ function stadium() {
             if (x_ratio >= 1 || y_ratio >= 1) {
                 return null
             };
-
             return [
                 section,
                 view_y_options[Math.floor(y_ratio/.33)] +
-                view_x_options[Math.floor(x_ratio/.33)]
+                ((threeBySections.indexOf(section) > -1) ? 'm' : view_x_options[Math.floor(x_ratio/.33)])
             ];
         }
 
@@ -201,7 +200,8 @@ function stadium() {
                 return
                 // Error here
             };
-            section_view_panel.select('.diagram').attr('src', diagram_url.format(number));
+            console.log(diagram_url.format(number))
+            section_view_panel.select('.diagram img').attr('src', diagram_url.format(number));
             section_view_panel.select('.title').text('Section ' + number);
             section_view_panel.selectAll('.viewSelector > div').classed('active', false);
             if (threeBySections.indexOf(number) > -1) {
