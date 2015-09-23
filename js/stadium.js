@@ -72,7 +72,8 @@ function stadium() {
             'l','m','n','p','r','s','t','u','v','w','x','y','z'
         ],
         view_x_options = ['l', 'm', 'r'],
-        view_y_options = ['l', 'm', 't'];
+        view_y_options = ['l', 'm', 't'],
+        error_state = false;
 
     function my(selection) {
 
@@ -197,8 +198,8 @@ function stadium() {
             var number = parseInt(number),
                 result = activate_photo(number, row, seat);
             if (!result) {
+                show_error("Please select a valid seat");
                 return
-                // Error here
             };
             console.log(diagram_url.format(number))
             section_view_panel.select('.diagram img').attr('src', diagram_url.format(number));
@@ -210,7 +211,7 @@ function stadium() {
                 section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
             };
             section_view_panel.style('display', 'block');
-            jQuery('.viewSelector > div').css('height', jQuery('.diagram img').width() + 'px');
+            jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
         }
 
         function close_section(){
@@ -231,6 +232,20 @@ function stadium() {
                     encodeURIComponent(window.location.href)))
         }
 
+        function show_error(msg){
+            if (error_state === false) {
+                error_state = true;
+                error_pane.find('p').text(msg);
+                error_pane.fadeIn(200);
+                setTimeout(hide_error, 2000);
+            };
+        }
+
+        function hide_error(){
+            error_pane.fadeOut(200);
+            error_state = false;
+        }
+
 
         /* ========== VARIABLES & FUNCTIONS ========== */
         var spreadsheet_url = '',
@@ -241,7 +256,8 @@ function stadium() {
 
         container = selection,
         svg = selection.select('.canvas'),
-        section_view_panel = selection.select('.section-view-panel');
+        section_view_panel = selection.select('.section-view-panel'),
+        error_pane = jQuery('.error').fadeOut();
 
         /* ============================= */
         /* ========== RUNTIME ========== */

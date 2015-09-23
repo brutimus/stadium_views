@@ -142,6 +142,7 @@ body {
   width: 100%;
   height: 35px;
   margin-top: 10px;
+  outline: none;
 }
 #content-background {
   fill: #ffffff;
@@ -273,4 +274,24 @@ body {
 .container .section-view-panel .section-details .diagram .viewSelector .threeBy > div {
   clear: both;
   margin-left: 33%;
+}
+.container .error {
+  position: absolute;
+  width: 90%;
+  height: 40px;
+  background-color: rgba(50, 50, 50, 0.8);
+  border-radius: 10px;
+  left: 5%;
+  top: 18%;
+}
+.container .error p {
+  color: white;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  margin: 0;
+  text-align: center;
+  font-size: .95em;
 }
