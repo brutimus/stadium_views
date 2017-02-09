@@ -13,8 +13,8 @@ if (!String.prototype.format) {
 }
 
 function stadium() {
-    var diagram_url = '../img/sections/angels_SEC{0}.png',
-        photo_url = '../img/photos/{0}/{1}{2}.jpg',
+    var diagram_url = 'img/sections/angels_SEC{0}.png',
+        photo_url = 'img/photos/{0}/{1}{2}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})([a-z]{1,2})(\\d{1,2})$'),
         sections = [],
@@ -264,7 +264,7 @@ function stadium() {
         /* ============================= */
 
         draw_ui();
-        d3.xml('../img/stadium.svg', load_image);
+        d3.xml('img/stadium.svg', load_image);
 
         /* ========== DEBUG ========== */
 
