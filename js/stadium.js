@@ -14,11 +14,10 @@ if (!String.prototype.format) {
 
 function stadium() {
     var diagram_url = 'img/sections/angels_SEC{0}.png',
-        photo_url = 'img/photos/{0}/{1}{2}.jpg',
+        photo_url = 'img/photos/{0}{1}{2}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
-        hash_re = new RegExp('^#(\\d{3})([a-z]{1,2})(\\d{1,2})$'),
+        hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
         sections = [],
-        threeBySections = [],
         section_sizes = {
             101: [18, 15],102: [22, 11],103: [25, 32],104: [18, 32],
             105: [18, 32],106: [18, 32],107: [25, 32],108: [22, 14],
@@ -30,6 +29,25 @@ function stadium() {
             1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
             19,20,21,22,23,24,25,26,27,28,29,30,31,32
         ],
+        section_matricies = {
+            '101': [[3,3,3]],
+            '102': [[1,2,3], [3,]],
+            '103': [[1,1,2], [2,3,3]],
+            '104': [[3,3,3], [3,3,3]],
+            '105': [[3,3,3], [3,3,3]],
+            '106': [[3,3,3], [3,3,3]],
+            '107': [[1,1,2], [2,3,3]],
+            '108': [[1,2,3]],
+            '109': [[3,3,3]],
+            '110': [[3,3,3]],
+            '111': [[1,2,3]],
+            '112': [[1,1,2], [2,3,3]],
+            '113': [[3,3,3], [2,3,3]],
+            '114': [[3,3,3], [3,3,3]],
+            '115': [[3,3,3], [2,3,3]],
+            '116': [[1,1,2], [2,3,3]],
+            '117': [[1,2,3], [3,]],
+            '118': [[3,3,3]]},
         view_x_options = ['l', 'm', 'r'],
         view_y_options = ['l', 'm', 't'],
         error_state = false;
@@ -63,22 +81,28 @@ function stadium() {
         function load_image(data){
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(svg.select('#sections').selectAll('#sections > g')[0], function(index, val) {
+            $.each(d3.selectAll('#sections > g').nodes(), function(index, val) {
                 var section = d3.select(val),
                     section_number = section.attr('id').substring(7, 10);
                 sections.push(section_number);
                 section.datum({'number': section_number});
-                section.select('g').remove();
-                section.select('path').on('mouseover', function(d){
-                    $(this).attr('orig-fill', $(this).attr('fill'));
-                    $(this).attr('fill', 'red');
+                section.on('mouseover', function(d){
+                    var self = d3.select(this);
+                    self.selectAll('polygon,rect').attr(
+                        'orig-fill',
+                        self.selectAll('polygon,rect').attr('fill'));
+                    self.selectAll('polygon,rect').attr('fill', 'red');
                 }).on('mouseout', function(d){
-                    $(this).attr('fill', $(this).attr('orig-fill'));
+                    var self = d3.select(this);
+                    self.selectAll('polygon,rect').attr(
+                        'fill',
+                        self.selectAll('polygon,rect').attr('orig-fill'));
                 }).on('click', function(d){
                     container.select('#seat-selector #section').node().value = parseInt(section_number);
-                    view_section(section_number, 'a', 1);
+                    view_section(section_number, '', '');
                 });
             });
+            sections.sort();
             container.select('#seat-selector #section')
                 .selectAll('option')
                 .data(sections)
@@ -89,23 +113,28 @@ function stadium() {
         }
 
         function translate_seat_to_photo(section, row, seat){
+            // console.log('z', section, row, seat)
+            // console.log(typeof(row), typeof(seat))
 
             var section_size = section_sizes[section],
                 x_size = section_size[0],
                 y_size = section_size[1],
+                seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
+                row = !isNaN(parseInt(row)) ? +row : Math.floor(y_size / 2),
                 x_ratio = (seat / x_size),
                 y_ratio = row_options.indexOf(row) / y_size;
-            console.log(section, row, seat)
-            console.log(x_size, y_size, x_ratio, y_ratio)
-            console.log(row_options.indexOf(row) / y_size)
+            // console.log('x', seat, x_size);
+            // console.log('y', row, row_options.indexOf(row), y_size);
+            // console.log(section, row, seat);
+            // console.log(x_size, y_size, x_ratio, y_ratio);
 
-            if (x_ratio >= 1 || y_ratio >= 1) {
+            if (x_ratio > 1 || y_ratio > 1) {
                 return null
             };
             return [
                 section,
-                view_y_options[Math.floor(y_ratio/.33)] +
-                ((threeBySections.indexOf(section) > -1) ? 'm' : view_x_options[Math.floor(x_ratio/.33)])
+                view_y_options[Math.min(Math.floor(y_ratio * 3), 2)] +
+                ((threeBySections.indexOf(section) > -1) ? 'm' : view_x_options[Math.min(Math.floor(x_ratio * 3), 2)])
             ];
         }
 
@@ -114,7 +143,7 @@ function stadium() {
             if (section_photoview == null) {
                 return false;
             };
-            console.log(section_photoview)
+            // console.log(section_photoview)
             do_activate_photo(section_photoview[0], section_photoview[1]);
             write_url_hash(section, row, seat);
             return true;
@@ -138,6 +167,7 @@ function stadium() {
         function read_url_hash(){
             var hash = window.location.hash;
             console.log(hash)
+
             if (hash_re.test(hash)) {
                 var matches = hash_re.exec(hash),
                     section = parseInt(matches[1]),
@@ -146,14 +176,19 @@ function stadium() {
                 container.select('#seat-selector #section').node().value = section;
                 view_section(section, row, seat);
                 activate_photo(section, row, seat);
+            } else if (parseInt(hash.slice(1)) > 0) {
+                var section = parseInt(hash.slice(1));
+                container.select('#seat-selector #section').node().value = section;
+                view_section(section, '', '');
+                // activate_photo(section, '', '');
             };
         }
         function write_url_hash(section, row, seat){
-            window.location.hash = section + row + seat;
+            window.location.hash = section + '-' + row + '-' + seat;
         }
 
         function view_section(number, row, seat){
-            console.log(number, row, seat);
+            console.log("view section", number, row, seat);
             var number = parseInt(number),
                 result = activate_photo(number, row, seat);
             if (!result) {
@@ -187,7 +222,7 @@ function stadium() {
             section_view_panel.select('.sharing .email').attr(
                 'href',
                 mailto_url.format(
-                    encodeURIComponent('OCREGISTER: View my seat selection at Angel\'s Stadium' ),
+                    encodeURIComponent('Spokesman: View my seat selection at The Mac' ),
                     encodeURIComponent(window.location.href)))
         }
 
