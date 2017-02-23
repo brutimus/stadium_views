@@ -26643,10 +26643,11 @@ if (!String.prototype.format) {
 
 function stadium() {
     var diagram_url = 'img/sections/angels_SEC{0}.png',
-        photo_url = 'img/photos/{0}{1}{2}.jpg',
+        photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
         sections = [],
+        lower_upper_cutoff = 14, // Basically, number of rows in lower section
         section_sizes = {
             101: [18, 15],102: [22, 11],103: [25, 32],104: [18, 32],
             105: [18, 32],106: [18, 32],107: [25, 32],108: [22, 14],
@@ -26659,26 +26660,26 @@ function stadium() {
             19,20,21,22,23,24,25,26,27,28,29,30,31,32
         ],
         section_matricies = {
-            '101': [[3,3,3]],
-            '102': [[1,2,3], [3,]],
-            '103': [[1,1,2], [2,3,3]],
-            '104': [[3,3,3], [3,3,3]],
-            '105': [[3,3,3], [3,3,3]],
-            '106': [[3,3,3], [3,3,3]],
-            '107': [[1,1,2], [2,3,3]],
-            '108': [[1,2,3]],
-            '109': [[3,3,3]],
-            '110': [[3,3,3]],
-            '111': [[1,2,3]],
-            '112': [[1,1,2], [2,3,3]],
-            '113': [[3,3,3], [2,3,3]],
-            '114': [[3,3,3], [3,3,3]],
-            '115': [[3,3,3], [2,3,3]],
-            '116': [[1,1,2], [2,3,3]],
-            '117': [[1,2,3], [3,]],
-            '118': [[3,3,3]]},
-        view_x_options = ['l', 'm', 'r'],
-        view_y_options = ['l', 'm', 't'],
+            101: [[3,3,3]],
+            102: [[1,2,3], [3]],
+            103: [[1,1,2], [2,3,3]],
+            104: [[3,3,3], [3,3,3]],
+            105: [[3,3,3], [3,3,3]],
+            106: [[3,3,3], [3,3,3]],
+            107: [[1,1,2], [2,3,3]],
+            108: [[1,2,3]],
+            109: [[3,3,3]],
+            110: [[3,3,3]],
+            111: [[1,2,3]],
+            112: [[1,1,2], [2,3,3]],
+            113: [[3,3,3], [2,3,3]],
+            114: [[3,3,3], [3,3,3]],
+            115: [[3,3,3], [2,3,3]],
+            116: [[1,1,2], [2,3,3]],
+            117: [[1,2,3], [3]],
+            118: [[3,3,3]]},
+        view_x_options = ['l', 'c', 'r'],
+        view_y_options = ['b', 'm', 't'],
         error_state = false;
 
     function my(selection) {
@@ -26742,28 +26743,84 @@ function stadium() {
         }
 
         function translate_seat_to_photo(section, row, seat){
-            // console.log('z', section, row, seat)
-            // console.log(typeof(row), typeof(seat))
 
             var section_size = section_sizes[section],
+                section_matrix = section_matricies[section],
+                subsection_matrix,
                 x_size = section_size[0],
                 y_size = section_size[1],
                 seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
                 row = !isNaN(parseInt(row)) ? +row : Math.floor(y_size / 2),
                 x_ratio = (seat / x_size),
-                y_ratio = row_options.indexOf(row) / y_size;
-            // console.log('x', seat, x_size);
-            // console.log('y', row, row_options.indexOf(row), y_size);
-            // console.log(section, row, seat);
-            // console.log(x_size, y_size, x_ratio, y_ratio);
+                y_ratio,
+                subsection,
+                photo_x,
+                photo_y, photo_y_index;
 
+            // Full section of two subsections
+            if(section_matrix.length > 1 && section_matrix[1].length > 1) {
+                if (row <= lower_upper_cutoff) {
+                    subsection = 'l';
+                    y_ratio = row / lower_upper_cutoff;
+                } else {
+                    subsection = 'u';
+                    y_ratio = (row - lower_upper_cutoff) / (y_size - lower_upper_cutoff);
+                }
+                subsection_matrix = section_matrix[subsection == 'l' ? 0 : 1];
+
+            // Lower section with boxes above
+            } else if (section_matrix.length > 1) {
+                y_ratio = 1;
+                subsection = 'x'; // Box
+                subsection_matrix = section_matrix[1];
+
+            // Only a lower section
+            } else {
+                y_ratio = row / y_size;
+                subsection = ''
+                subsection_matrix = section_matrix[0];
+            }
+
+            // Test to see if selected row/seat are out of bounds
             if (x_ratio > 1 || y_ratio > 1) {
                 return null
             };
+
+            // Calculate photo-y
+            if (subsection === 'x') {
+                photo_y_index = 0;
+                photo_y = 'x'; // Box
+            } else {
+                photo_y_index = Math.min(Math.floor(y_ratio * 3), 2);
+                photo_y = view_y_options[photo_y_index];
+            }
+            console.log(subsection_matrix)
+
+            // Calculate photo-x
+            switch (subsection_matrix[photo_y_index]) {
+                case 1:
+                    photo_x = '';
+                    break;
+                case 2:
+                    photo_x = ['l', 'r'][Math.min(Math.floor(x_ratio * 2), 2)];
+                    break;
+                case 3:
+                    photo_x = ['l', 'c', 'r'][Math.min(Math.floor(x_ratio * 3), 2)];
+                    break;
+            }
+            console.log("photo_x", photo_x);
+            console.log("photo_y", photo_y);
+            console.log("subsection", subsection);
+
+
+            if (x_ratio > 1 || y_ratio > 1) {
+                return null;
+            };
             return [
                 section,
-                view_y_options[Math.min(Math.floor(y_ratio * 3), 2)] +
-                ((threeBySections.indexOf(section) > -1) ? 'm' : view_x_options[Math.min(Math.floor(x_ratio * 3), 2)])
+                subsection,
+                photo_y,
+                photo_x
             ];
         }
 
@@ -26773,19 +26830,20 @@ function stadium() {
                 return false;
             };
             // console.log(section_photoview)
-            do_activate_photo(section_photoview[0], section_photoview[1]);
+            do_activate_photo(section_photoview);
             write_url_hash(section, row, seat);
             return true;
         }
 
-        function do_activate_photo(section, view){
+        function do_activate_photo(photo_params){
             section_view_panel.select('.photo').attr(
                 'src', photo_url.format(
-                    Math.floor(section / 100) * 100,
-                    section,
-                    view));
-            section_view_panel.selectAll('.viewSelector > div > .active').classed('active', false);
-            section_view_panel.selectAll('.viewSelector > div > .' + view).classed('active', true);
+                    photo_params[0],   // Section
+                    photo_params[1],   // Subsection
+                    photo_params[2],   // Photo Y
+                    photo_params[3])); // Photo X
+            // section_view_panel.selectAll('.viewSelector > div > .active').classed('active', false);
+            // section_view_panel.selectAll('.viewSelector > div > .' + view).classed('active', true);
         }
 
         function activate_view(view){
@@ -26827,12 +26885,12 @@ function stadium() {
             console.log(diagram_url.format(number))
             section_view_panel.select('.diagram img').attr('src', diagram_url.format(number));
             section_view_panel.select('.title').text('Section ' + number);
-            section_view_panel.selectAll('.viewSelector > div').classed('active', false);
-            if (threeBySections.indexOf(number) > -1) {
-                section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
-            } else {
-                section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
-            };
+            // section_view_panel.selectAll('.viewSelector > div').classed('active', false);
+            // if (threeBySections.indexOf(number) > -1) {
+            //     section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
+            // } else {
+            //     section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
+            // };
             section_view_panel.style('display', 'block');
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
         }
