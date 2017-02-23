@@ -14,10 +14,11 @@ if (!String.prototype.format) {
 
 function stadium() {
     var diagram_url = 'img/sections/angels_SEC{0}.png',
-        photo_url = 'img/photos/{0}{1}{2}.jpg',
+        photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
         sections = [],
+        lower_upper_cutoff = 14, // Basically, number of rows in lower section
         section_sizes = {
             'A': [10,10],
             'Bu': [10,10],
@@ -50,31 +51,27 @@ function stadium() {
             'RFB2': [10,10],
             'RFB3': [10,10],
         },
-        row_options = [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
-        ],
         section_matricies = {
-            '101': [[3,3,3]],
-            '102': [[1,2,3], [3,]],
-            '103': [[1,1,2], [2,3,3]],
-            '104': [[3,3,3], [3,3,3]],
-            '105': [[3,3,3], [3,3,3]],
-            '106': [[3,3,3], [3,3,3]],
-            '107': [[1,1,2], [2,3,3]],
-            '108': [[1,2,3]],
-            '109': [[3,3,3]],
-            '110': [[3,3,3]],
-            '111': [[1,2,3]],
-            '112': [[1,1,2], [2,3,3]],
-            '113': [[3,3,3], [2,3,3]],
-            '114': [[3,3,3], [3,3,3]],
-            '115': [[3,3,3], [2,3,3]],
-            '116': [[1,1,2], [2,3,3]],
-            '117': [[1,2,3], [3,]],
-            '118': [[3,3,3]]},
-        view_x_options = ['l', 'm', 'r'],
-        view_y_options = ['l', 'm', 't'],
+            '101': [3,3,3],
+            '102': [1,2,3],
+            '103': [1,1,2],
+            '104': [3,3,3],
+            'Bu': [3,3,3],
+            '106': [3,3,3],
+            '107': [1,1,2],
+            '108': [1,2,3],
+            '109': [3,3,3],
+            '110': [3,3,3],
+            '111': [1,2,3],
+            '112': [1,1,2],
+            '113': [3,3,3],
+            '114': [3,3,3],
+            '115': [3,3,3],
+            '116': [1,1,2],
+            '117': [1,2,3],
+            '118': [3,3,3]},
+        view_x_options = ['l', 'c', 'r'],
+        view_y_options = ['b', 'm', 't'],
         error_state = false;
 
     function my(selection) {
@@ -151,23 +148,48 @@ function stadium() {
             // console.log(typeof(row), typeof(seat))
 
             var section_size = section_sizes[section],
+                section_matrix = section_matricies[section],
                 x_size = section_size[0],
                 y_size = section_size[1],
                 seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
                 row = !isNaN(parseInt(row)) ? +row : Math.floor(y_size / 2),
                 x_ratio = (seat / x_size),
-                y_ratio = row_options.indexOf(row) / y_size;
-            console.log(section, row, seat)
-            console.log(section_size, x_size, y_size, x_ratio, y_ratio)
-            console.log(row_options.indexOf(row) / y_size)
+                y_ratio = row / y_size,
+                photo_x,
+                photo_y, photo_y_index;
 
+            // Test to see if selected row/seat are out of bounds
             if (x_ratio > 1 || y_ratio > 1) {
                 return null
             };
+
+            // Calculate photo-y
+            photo_y_index = Math.min(Math.floor(y_ratio * 3), 2);
+            photo_y = view_y_options[photo_y_index];
+
+            // Calculate photo-x
+            switch (section_matrix[photo_y_index]) {
+                case 1:
+                    photo_x = '';
+                    break;
+                case 2:
+                    photo_x = ['l', 'r'][Math.min(Math.floor(x_ratio * 2), 2)];
+                    break;
+                case 3:
+                    photo_x = ['l', 'c', 'r'][Math.min(Math.floor(x_ratio * 3), 2)];
+                    break;
+            }
+            console.log("photo_x", photo_x);
+            console.log("photo_y", photo_y);
+
+
+            if (x_ratio > 1 || y_ratio > 1) {
+                return null;
+            };
             return [
                 section,
-                view_y_options[Math.min(Math.floor(y_ratio * 3), 2)] +
-                view_x_options[Math.min(Math.floor(x_ratio * 3), 2)]
+                photo_y,
+                photo_x
             ];
         }
 
@@ -177,21 +199,18 @@ function stadium() {
             if (section_photoview == null) {
                 return false;
             };
-            console.log('section_photoview: ', section_photoview)
-            do_activate_photo(section_photoview[0], section_photoview[1]);
+            // console.log(section_photoview)
+            do_activate_photo(section_photoview);
             write_url_hash(section, row, seat);
             return true;
         }
 
-        function do_activate_photo(section, view){
-            // This function swaps out the photo on the overlay panel.
+        function do_activate_photo(photo_params){
             section_view_panel.select('.photo').attr(
                 'src', photo_url.format(
-                    Math.floor(section / 100) * 100,
-                    section,
-                    view));
-            section_view_panel.selectAll('.viewSelector > div > .active').classed('active', false);
-            section_view_panel.selectAll('.viewSelector > div > .' + view).classed('active', true);
+                    photo_params[0],   // Section
+                    photo_params[2],   // Photo Y
+                    photo_params[3])); // Photo X
         }
 
         function activate_view(view){
@@ -237,12 +256,6 @@ function stadium() {
             console.log(diagram_url.format(sec))
             section_view_panel.select('.diagram img').attr('src', diagram_url.format(sec));
             section_view_panel.select('.title').text('Section ' + sec);
-            section_view_panel.selectAll('.viewSelector > div').classed('active', false);
-            if (threeBySections.indexOf(sec) > -1) {
-                section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
-            } else {
-                section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
-            };
             section_view_panel.style('display', 'block');
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
         }
