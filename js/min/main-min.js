@@ -26642,10 +26642,10 @@ if (!String.prototype.format) {
 }
 
 function stadium() {
-    var diagram_url = 'img/sections/angels_SEC{0}.png',
+    var diagram_url = 'img/sections/{0}{1}.png',
         photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
-        hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
+        hash_re = new RegExp('^#(\\d{3})-(\\d{0,2})-(\\d{0,2})-([ulx]?)$'),
         sections = [],
         lower_upper_cutoff = 14, // Basically, number of rows in lower section
         section_sizes = {
@@ -26660,6 +26660,8 @@ function stadium() {
             19,20,21,22,23,24,25,26,27,28,29,30,31,32
         ],
         section_matricies = {
+            // Defines the arrangement of photos taken in each section
+            // [lower_sec, upper_sec]
             101: [[3,3,3]],
             102: [[1,2,3], [3]],
             103: [[1,1,2], [2,3,3]],
@@ -26711,25 +26713,32 @@ function stadium() {
         function load_image(data){
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(d3.selectAll('#sections > g').nodes(), function(index, val) {
+            $.each(d3.selectAll('#sections > *').nodes(), function(index, val) {
                 var section = d3.select(val),
-                    section_number = section.attr('id').substring(7, 10);
-                sections.push(section_number);
-                section.datum({'number': section_number});
+                    poly_id = section.attr('id'),
+                    subsection = poly_id.length > 4 ? poly_id[4] : '',
+                    section_number = poly_id.substring(1, 4);
+                if (sections.indexOf(section_number) < 0) {
+                    sections.push(section_number);
+                }
+                section.datum({
+                    'number': section_number,
+                    'subsection': subsection
+                });
                 section.on('mouseover', function(d){
                     var self = d3.select(this);
-                    self.selectAll('polygon,rect').attr(
+                    self.attr(
                         'orig-fill',
-                        self.selectAll('polygon,rect').attr('fill'));
-                    self.selectAll('polygon,rect').attr('fill', 'red');
+                        self.attr('fill'));
+                    self.attr('fill', 'red');
                 }).on('mouseout', function(d){
                     var self = d3.select(this);
-                    self.selectAll('polygon,rect').attr(
+                    self.attr(
                         'fill',
-                        self.selectAll('polygon,rect').attr('orig-fill'));
+                        self.attr('orig-fill'));
                 }).on('click', function(d){
                     container.select('#seat-selector #section').node().value = parseInt(section_number);
-                    view_section(section_number, '', '');
+                    view_section(section_number, '', '', subsection);
                 });
             });
             sections.sort();
@@ -26742,54 +26751,81 @@ function stadium() {
                 .text(function(d){return d});
         }
 
-        function translate_seat_to_photo(section, row, seat){
-
+        function translate_seat_to_photo(section, row, seat, subsection){
+            console.log("TRANSLATE: ", section, row, seat, subsection);
             var section_size = section_sizes[section],
                 section_matrix = section_matricies[section],
                 subsection_matrix,
                 x_size = section_size[0],
                 y_size = section_size[1],
-                seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
+                y_ratio;
+
+            //HACK
+            switch(subsection) {
+                case 'l':
+                    row = 7;
+                    seat = x_size / 2;
+                    subsection_matrix = section_matrix[0];
+                    y_ratio = 0.5;
+                    break;
+                case 'u':
+                    row = (y_size - lower_upper_cutoff) / 2;
+                    seat = x_size / 2;
+                    subsection_matrix = section_matrix[1];
+                    y_ratio = 0.5;
+                    break;
+                case 'x':
+                    row = lower_upper_cutoff + 1;
+                    seat = x_size / 2;
+                    subsection_matrix = section_matrix[1];
+                    y_ratio = 1;
+                    break;
+            }
+            //ENDHACK
+
+            var seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
                 row = !isNaN(parseInt(row)) ? +row : Math.floor(y_size / 2),
                 x_ratio = (seat / x_size),
-                y_ratio,
-                subsection,
+                // subsection,
                 photo_x,
                 photo_y, photo_y_index;
 
-            // Full section of two subsections
-            if(section_matrix.length > 1 && section_matrix[1].length > 1) {
-                if (row <= lower_upper_cutoff) {
-                    subsection = 'l';
-                    y_ratio = row / lower_upper_cutoff;
+            if (!subsection){
+                console.log('NOSUBSECTION')
+                // Full section of two subsections
+                if(section_matrix.length > 1) {
+                    if (row <= lower_upper_cutoff) {
+                        subsection = 'l';
+                        y_ratio = row / lower_upper_cutoff;
+                    } else {
+                        if (section_matrix[1].length > 1){
+                            subsection = 'u';
+                            y_ratio = (row - lower_upper_cutoff) / (y_size - lower_upper_cutoff);
+                        } else {
+                            subsection = 'x';
+                            y_ratio = 1;
+                        }
+                    }
+                    subsection_matrix = section_matrix[subsection == 'l' ? 0 : 1];
+
+                // Only a lower section
                 } else {
-                    subsection = 'u';
-                    y_ratio = (row - lower_upper_cutoff) / (y_size - lower_upper_cutoff);
+                    y_ratio = row / y_size;
+                    subsection = ''
+                    subsection_matrix = section_matrix[0];
                 }
-                subsection_matrix = section_matrix[subsection == 'l' ? 0 : 1];
-
-            // Lower section with boxes above
-            } else if (section_matrix.length > 1) {
-                y_ratio = 1;
-                subsection = 'x'; // Box
-                subsection_matrix = section_matrix[1];
-
-            // Only a lower section
-            } else {
-                y_ratio = row / y_size;
-                subsection = ''
-                subsection_matrix = section_matrix[0];
             }
 
             // Test to see if selected row/seat are out of bounds
             if (x_ratio > 1 || y_ratio > 1) {
+                console.log('ERR: ', x_ratio, y_ratio);
                 return null
             };
 
             // Calculate photo-y
             if (subsection === 'x') {
                 photo_y_index = 0;
-                photo_y = 'x'; // Box
+                photo_y = ''; // Box
             } else {
                 photo_y_index = Math.min(Math.floor(y_ratio * 3), 2);
                 photo_y = view_y_options[photo_y_index];
@@ -26824,15 +26860,15 @@ function stadium() {
             ];
         }
 
-        function activate_photo(section, row, seat) {
-            section_photoview = translate_seat_to_photo(section, row, seat);
+        function activate_photo(section, row, seat, subsection) {
+            section_photoview = translate_seat_to_photo(section, row, seat, subsection);
             if (section_photoview == null) {
                 return false;
             };
             // console.log(section_photoview)
             do_activate_photo(section_photoview);
-            write_url_hash(section, row, seat);
-            return true;
+            write_url_hash(section, row, seat, subsection);
+            return true, section_photoview;
         }
 
         function do_activate_photo(photo_params){
@@ -26854,15 +26890,16 @@ function stadium() {
         function read_url_hash(){
             var hash = window.location.hash;
             console.log(hash)
+            regex_parts = hash_re.exec(hash);
 
-            if (hash_re.test(hash)) {
-                var matches = hash_re.exec(hash),
-                    section = parseInt(matches[1]),
-                    row = matches[2],
-                    seat = parseInt(matches[3]);
+            if (regex_parts) {
+                var section = parseInt(regex_parts[1]),
+                    row = regex_parts[2],
+                    seat = regex_parts[3],
+                    subsection = regex_parts[4];
                 container.select('#seat-selector #section').node().value = section;
-                view_section(section, row, seat);
-                activate_photo(section, row, seat);
+                view_section(section, row, seat, subsection);
+                // activate_photo(section, row, seat);
             } else if (parseInt(hash.slice(1)) > 0) {
                 var section = parseInt(hash.slice(1));
                 container.select('#seat-selector #section').node().value = section;
@@ -26870,23 +26907,29 @@ function stadium() {
                 // activate_photo(section, '', '');
             };
         }
-        function write_url_hash(section, row, seat){
-            window.location.hash = section + '-' + row + '-' + seat;
+        function write_url_hash(section, row, seat, subsection){
+            window.location.hash = (
+                (section || '') + '-' +
+                (row || '') + '-' +
+                (seat || '') + '-' +
+                (subsection || ''));
         }
 
-        function view_section(number, row, seat){
-            console.log("view section", number, row, seat);
-            var number = parseInt(number),
-                result = activate_photo(number, row, seat);
+        function view_section(section, row, seat, subsection){
+            console.log("view section", section, row, seat, subsection);
+            var section = parseInt(section),
+                result = activate_photo(section, row, seat, subsection);
             if (!result) {
                 show_error("Please select a valid seat");
                 return
             };
-            console.log(diagram_url.format(number))
-            section_view_panel.select('.diagram img').attr('src', diagram_url.format(number));
-            section_view_panel.select('.title').text('Section ' + number);
+            console.log(diagram_url.format(result[0], result[1]))
+            section_view_panel.select('.diagram img').attr(
+                'src',
+                diagram_url.format(result[0], result[1]));
+            section_view_panel.select('.title').text('Section ' + section);
             // section_view_panel.selectAll('.viewSelector > div').classed('active', false);
-            // if (threeBySections.indexOf(number) > -1) {
+            // if (threeBySections.indexOf(section) > -1) {
             //     section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
             // } else {
             //     section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
