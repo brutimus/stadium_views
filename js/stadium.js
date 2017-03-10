@@ -1,5 +1,3 @@
-//@codekit-prepend "../bower_components/d3/d3.js"
-
 if (!String.prototype.format) {
   String.prototype.format = function() {
     var args = arguments;
@@ -61,7 +59,7 @@ function stadium() {
             content_group = svg.append('g')
                 .attr('class', 'content');
             content_group.append('rect')
-                .attr('id', 'content-background')
+                .attr('class', 'content-background')
                 .attr('width', '100%')
                 .attr('height', '100%');
 
@@ -76,7 +74,7 @@ function stadium() {
             section_view_panel.selectAll('.viewSelector > div > div').on('click', function(){
                 var e = d3.event;
                 e.preventDefault();
-                activate_view(d3.select(e.target).attr('class').split(' ')[0]);
+                activate_view(d3.select(e.target).attr('class'));
             });
             read_url_hash();
         }
@@ -123,7 +121,7 @@ function stadium() {
         }
 
         function translate_seat_to_photo(section, row, seat, subsection){
-            console.log("TRANSLATE: ", section, row, seat, subsection);
+            // console.log("TRANSLATE: ", section, row, seat, subsection);
             var section_size = section_sizes[section],
                 section_matrix = section_matricies[section],
                 subsection_matrix,
@@ -162,7 +160,6 @@ function stadium() {
                 photo_y, photo_y_index;
 
             if (!subsection){
-                console.log('NOSUBSECTION')
                 // Full section of two subsections
                 if(section_matrix.length > 1) {
                     if (row <= lower_upper_cutoff) {
@@ -189,7 +186,7 @@ function stadium() {
 
             // Test to see if selected row/seat are out of bounds
             if (x_ratio > 1 || y_ratio > 1) {
-                console.log('ERR: ', x_ratio, y_ratio);
+                // console.log('ERR: ', x_ratio, y_ratio);
                 return null
             };
 
@@ -201,7 +198,7 @@ function stadium() {
                 photo_y_index = Math.min(Math.floor(y_ratio * 3), 2);
                 photo_y = view_y_options[photo_y_index];
             }
-            console.log(subsection_matrix)
+            // console.log(subsection_matrix)
 
             // Calculate photo-x
             switch (subsection_matrix[photo_y_index]) {
@@ -215,9 +212,9 @@ function stadium() {
                     photo_x = ['l', 'c', 'r'][Math.min(Math.floor(x_ratio * 3), 2)];
                     break;
             }
-            console.log("photo_x", photo_x);
-            console.log("photo_y", photo_y);
-            console.log("subsection", subsection);
+            // console.log("photo_x", photo_x);
+            // console.log("photo_y", photo_y);
+            // console.log("subsection", subsection);
 
 
             if (x_ratio > 1 || y_ratio > 1) {
@@ -243,6 +240,7 @@ function stadium() {
         }
 
         function do_activate_photo(photo_params){
+            // console.log('PHOTO PARAMS', photo_params)
             section_view_panel.select('.photo').attr(
                 'src', photo_url.format(
                     photo_params[0],   // Section
@@ -254,13 +252,32 @@ function stadium() {
         }
 
         function activate_view(view){
-            var section = parseInt(container.select('#seat-selector #section').node().value);
-            do_activate_photo(section, view);
+            var diagram_filename = container.select('.diagram img')
+                    .attr('src').split('/')[2],
+                subsection,
+                section = diagram_filename.slice(0, 3);
+            switch(diagram_filename[3]){
+                case 'u':
+                case 'x':
+                case 'l':
+                    subsection = diagram_filename[3];
+                    break;
+                default:
+                    subsection = '';
+            }
+            // console.log('---->', section, subsection, view)
+            do_activate_photo([
+                section,
+                subsection,
+                view[0].trim(),
+                view[1].trim()
+            ])
+            update_share_urls();
         }
 
         function read_url_hash(){
             var hash = window.location.hash;
-            console.log(hash)
+            // console.log(hash)
             regex_parts = hash_re.exec(hash);
 
             if (regex_parts) {
@@ -287,34 +304,45 @@ function stadium() {
         }
 
         function view_section(section, row, seat, subsection){
-            console.log("view section", section, row, seat, subsection);
+            // console.log("view section", section, row, seat, subsection);
             var section = parseInt(section),
                 result = activate_photo(section, row, seat, subsection);
             if (!result) {
                 show_error("Please select a valid seat");
                 return
             };
-            console.log(diagram_url.format(result[0], result[1]))
+            // console.log(diagram_url.format(result[0], result[1]))
             section_view_panel.select('.diagram img').attr(
                 'src',
                 diagram_url.format(result[0], result[1]));
             section_view_panel.select('.title').text('Section ' + section);
-            // section_view_panel.selectAll('.viewSelector > div').classed('active', false);
-            // if (threeBySections.indexOf(section) > -1) {
-            //     section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
-            // } else {
-            //     section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
-            // };
+            section_view_panel.selectAll('.viewSelector > div').classed('active', false);
+
+            var selector_overlay_class;
+            switch(result[1]){
+                case 'u':
+                case 'x':
+                    selector_overlay_class = section_matricies[section][1].join('');
+                    break;
+                default:
+                    selector_overlay_class = section_matricies[section][0].join('');
+                    break;
+            }
+            section_view_panel.select(
+                '.viewSelector > .sel' + selector_overlay_class
+            ).classed('active', true);
             section_view_panel.style('display', 'block');
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
+            update_share_urls();
         }
 
         function close_section(){
             section_view_panel.style('display', 'none');
             window.location.hash = '';
+            update_share_urls();
         }
 
-        function update_share_urls(section, view){
+        function update_share_urls(){
             // Facebook
 
             // Twitter
@@ -344,7 +372,6 @@ function stadium() {
 
         /* ========== VARIABLES & FUNCTIONS ========== */
         var spreadsheet_url = '',
-            // svg,
 
 
         /* ========== SETUP SVG ========== */

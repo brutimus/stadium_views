@@ -13,10 +13,7 @@
 
     </head>
     <body>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <div class="container">
+        <div class="seating-chart-container">
             <div class="selector">
                 <form id="seat-selector">
                     <select id="section"></select>
@@ -110,21 +107,71 @@
                                 <div class="diagram">
                                     <img src="img/sections/101.png">
                                     <div class="viewSelector">
-                                        <div class="threeBy">
-                                            <div class="lm"></div>
-                                            <div class="mm"></div>
-                                            <div class="tm"></div>
+                                        <div class="sel112">
+                                            <div class="sel-row">
+                                                <div class="b "></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="m "></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="tl"></div>
+                                                <div class="tr"></div>
+                                            </div>
                                         </div>
-                                        <div class="nineBy">
-                                            <div class="ll"></div>
-                                            <div class="lm"></div>
-                                            <div class="lr"></div>
-                                            <div class="ml"></div>
-                                            <div class="mm"></div>
-                                            <div class="mr"></div>
-                                            <div class="tl"></div>
-                                            <div class="tm"></div>
-                                            <div class="tr"></div>
+                                        <div class="sel123">
+                                            <div class="sel-row">
+                                                <div class="b "></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="ml"></div>
+                                                <div class="mr"></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="tl"></div>
+                                                <div class="tc"></div>
+                                                <div class="tr"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sel233">
+                                            <div class="sel-row">
+                                                <div class="bl"></div>
+                                                <div class="br"></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="ml"></div>
+                                                <div class="mc"></div>
+                                                <div class="mr"></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="tl"></div>
+                                                <div class="tc"></div>
+                                                <div class="tr"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sel333">
+                                            <div class="sel-row">
+                                                <div class="bl"></div>
+                                                <div class="bc"></div>
+                                                <div class="br"></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="ml"></div>
+                                                <div class="mc"></div>
+                                                <div class="mr"></div>
+                                            </div>
+                                            <div class="sel-row">
+                                                <div class="tl"></div>
+                                                <div class="tc"></div>
+                                                <div class="tr"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sel3">
+                                            <div class="sel-row">
+                                                <div class=" l"></div>
+                                                <div class=" c"></div>
+                                                <div class=" r"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +182,8 @@
             </div>
             <div class="error"><p></p></div>
         </div>
-
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/d3/d3.min.js"></script>
         <script src="js/min/main-min.js"></script>
     </body>
 </html>
