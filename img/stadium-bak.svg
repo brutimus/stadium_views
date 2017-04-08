@@ -1,0 +1,31 @@
+<svg id="sections" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612 596">
+    <path class="section" id="section116" fill="#001F5B" fill-opacity=".5" d="M92.512 565.544l48.704-111.273h28.731v43.209h10.683v68.064z"/>
+    <path class="section" id="section112" fill="#001F5B" fill-opacity=".5" d="M503.456 565.544l-38.496-91.655h-36.532v23.451l-12.089-.169v68.373z"/>
+    <path class="section" id="section115" fill="#001F5B" fill-opacity=".5" d="M189.839 565.544h67.09V497.48h-17.906v-43.209h-34.292l.169 43.209h-15.061z"/>
+    <path class="section" id="section113" fill="#001F5B" fill-opacity=".5" d="M340.378 565.544h66.258l-.169-68.064h-13.852v-43.209h-31.291v43.209h-20.946z"/>
+    <path class="section" id="section114" fill="#001F5B" fill-opacity=".5" d="M265.152 566.22h67.171v-68.064h-7.825v-24.29H273.99l.169 24.29h-9.007z"/>
+    <path class="section" id="section116lower" fill="#001F5B" fill-opacity=".5" d="M133.869 451.768h43.551v-86.401h-5.122z"/>
+    <path class="section" id="section112lower" fill="#001F5B" fill-opacity=".5" d="M463.874 451.768h-44.551v-86.401h5.122z"/>
+    <path class="section" id="section115lower" fill="#001F5B" fill-opacity=".5" d="M188.461 365.367h65.637v86.4h-65.637z"/>
+    <path class="section" id="section114lower" fill="#001F5B" fill-opacity=".5" d="M265.801 372.35h67.029v79.418h-67.029z"/>
+    <path class="section" id="section113lower" fill="#001F5B" fill-opacity=".5" d="M343.871 365.367h64.637v86.4h-64.637z"/>
+    <path class="section" id="section117" fill="#001F5B" fill-opacity=".5" d="M134.797 432.851l26.869-66.894-6.021-5.603-55.479 22.812-12.667-13.167-14.866 4.667z"/>
+    <path class="section" id="section111" fill="#001F5B" fill-opacity=".5" d="M470.915 443.768l65.556-65-25.338-10.473-12.556 11.893-62.079-24.687-3.463 4.727z"/>
+    <path class="section" id="section110" fill="#001F5B" fill-opacity=".5" d="M535.146 368.957V301.05h-99.327v8.108l-7.77.676v24.663l12.5 4.73v-8.109z"/>
+    <path class="section" id="section118" fill="#001F5B" fill-opacity=".5" d="M61.146 355.957V301.05h99.328v8.108l7.77.676v24.663l-12.5 4.73v-8.109l-57.463 24.585z"/>
+    <path class="section" id="section103" fill="#001F5B" fill-opacity=".5" d="M94.512 29.719l46.704 110.273h28.731v-43.21h10.683V29.719z"/>
+    <path class="section" id="section107" fill="#001F5B" fill-opacity=".5" d="M503.456 29.719L458.75 139.396h-29.322l-1-42.473-12.089.169V29.719z"/>
+    <path class="section" id="section104" fill="#001F5B" fill-opacity=".5" d="M189.839 29.719h67.09v67.063h-17.906v42.614h-34.292l.169-42.614h-15.061z"/>
+    <path class="section" id="section106" fill="#001F5B" fill-opacity=".5" d="M340.378 29.719h66.258l-.169 67.063h-13.852v42.614h-33.291V96.782h-18.946z"/>
+    <path class="section" id="section105" fill="#001F5B" fill-opacity=".5" d="M265.152 29.043h67.171v67.063h-7.825v43.29H273.99l.169-43.29h-9.007z"/>
+    <path class="section" id="section103lower" fill="#001F5B" fill-opacity=".5" d="M133.869 142.495h43.551v86.401h-5.122z"/>
+    <path class="section" id="section107lower" fill="#001F5B" fill-opacity=".5" d="M463.874 142.495h-44.551v86.401h5.122z"/>
+    <path class="section" id="section104lower" fill="#001F5B" fill-opacity=".5" d="M188.461 142.495h64.637v86.4h-64.637z"/>
+    <path class="section" id="section105lower" fill="#001F5B" fill-opacity=".5" d="M263.801 142.495h69.029v79.418h-69.029z"/>
+    <path class="section" id="section106lower" fill="#001F5B" fill-opacity=".5" d="M343.871 142.495h64.637v86.4h-64.637z"/>
+    <path class="section" id="section102" fill="#001F5B" fill-opacity=".5" d="M134.797 161.412l26.869 66.894-6.021 5.602-55.479-22.811-12.667 13.167-14.866-4.667z"/>
+    <path class="section" id="section108" fill="#001F5B" fill-opacity=".5" d="M470.915 150.495l65.556 65-25.338 10.473-12.556-11.893-62.079 24.687-3.463-4.727z"/>
+    <path class="section" id="section109" fill="#001F5B" fill-opacity=".5" d="M535.146 225.306v67.907h-99.327v-8.109l-7.77-.675v-24.663l12.5-4.73v8.109z"/>
+    <path class="section" id="section101" fill="#001F5B" fill-opacity=".5" d="M61.146 238.306v54.907h99.328v-8.109l7.77-.675v-24.663l-12.5-4.73v8.109L98.281 238.56z"/>
+    <path id="floor" fill="#001F5B" d="M193.333 236.908h207.333V353H193.333z"/>
+</svg>
