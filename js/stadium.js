@@ -11,8 +11,10 @@ if (!String.prototype.format) {
 }
 
 function stadium() {
-    var diagram_url = 'img/sections/{0}{1}.png',
-        photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
+    var diagram_url = 'https://s3-us-west-2.amazonaws.com/public.spokesman.com/mac-seating-chart/sections/{0}{1}.png',
+        photo_url = 'https://s3-us-west-2.amazonaws.com/public.spokesman.com/mac-seating-chart/photos/comp/{0}{1}{2}{3}.jpg',
+        fb_url = 'https://www.facebook.com/dialog/feed?link={0}&app_id=316254480466&redirect_uri={1}&caption={2}',
+        twitter_url = 'https://twitter.com/share?text={0}&url={1}',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})-(\\d{0,2})-(\\d{0,2})-([ulx]?)$'),
         sections = [],
@@ -24,10 +26,6 @@ function stadium() {
             113: [18, 32],114: [18, 32],115: [18, 32],116: [25, 32],
             117: [22, 11],118: [15, 15]
         },
-        row_options = [
-            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
-            19,20,21,22,23,24,25,26,27,28,29,30,31,32
-        ],
         section_matricies = {
             // Defines the arrangement of photos taken in each section
             // [lower_sec, upper_sec]
@@ -71,7 +69,7 @@ function stadium() {
                 view_section(e.target[0].value, e.target[1].value, e.target[2].value);
             })
             section_view_panel.select('.close-button').on('click', close_section);
-            section_view_panel.selectAll('.viewSelector > div > div').on('click', function(){
+            section_view_panel.selectAll('.viewSelector > div > div > div').on('click', function(){
                 var e = d3.event;
                 e.preventDefault();
                 activate_view(d3.select(e.target).attr('class'));
@@ -82,7 +80,7 @@ function stadium() {
         function load_image(data){
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(d3.selectAll('#sections > *').nodes(), function(index, val) {
+            $.each(d3.selectAll('#sections > g').nodes(), function(index, val) {
                 var section = d3.select(val),
                     poly_id = section.attr('id'),
                     subsection = poly_id.length > 4 ? poly_id[4] : '',
@@ -95,16 +93,18 @@ function stadium() {
                     'subsection': subsection
                 });
                 section.on('mouseover', function(d){
-                    var self = d3.select(this);
-                    self.attr(
+                    var self = d3.select(this),
+                        child = self.select('rect,polygon');
+                    child.attr(
                         'orig-fill',
-                        self.attr('fill'));
-                    self.attr('fill', 'red');
+                        child.attr('fill'));
+                    child.attr('fill', 'red');
                 }).on('mouseout', function(d){
-                    var self = d3.select(this);
-                    self.attr(
+                    var self = d3.select(this),
+                        child = self.select('rect,polygon');
+                    child.attr(
                         'fill',
-                        self.attr('orig-fill'));
+                        child.attr('orig-fill'));
                 }).on('click', function(d){
                     container.select('#seat-selector #section').node().value = parseInt(section_number);
                     view_section(section_number, '', '', subsection);
@@ -252,8 +252,9 @@ function stadium() {
         }
 
         function activate_view(view){
-            var diagram_filename = container.select('.diagram img')
-                    .attr('src').split('/')[2],
+            var url_parts = container.select('.diagram img')
+                    .attr('src').split('/'),
+                diagram_filename = url_parts[url_parts.length - 1],
                 subsection,
                 section = diagram_filename.slice(0, 3);
             switch(diagram_filename[3]){
@@ -296,11 +297,16 @@ function stadium() {
             };
         }
         function write_url_hash(section, row, seat, subsection){
-            window.location.hash = (
+            var hash = '#' + (
                 (section || '') + '-' +
                 (row || '') + '-' +
                 (seat || '') + '-' +
                 (subsection || ''));
+            if(history.pushState) {
+                history.replaceState(null, null, hash);
+            } else {
+                window.location.hash = hash;
+            }
         }
 
         function view_section(section, row, seat, subsection){
@@ -328,30 +334,53 @@ function stadium() {
                     selector_overlay_class = section_matricies[section][0].join('');
                     break;
             }
-            section_view_panel.select(
+            
+            var selected_overlay = section_view_panel.select(
                 '.viewSelector > .sel' + selector_overlay_class
             ).classed('active', true);
-            section_view_panel.style('display', 'block');
+            section_view_panel
+                .style('display', 'block')
+                .style('top', (($(window).width() / parseFloat($("body").css("font-size"))) <= 30 ? $(window).scrollTop() : 0) + 'px');
+            var lr_width = Math.floor(section_view_panel
+                .select('.lower-right')
+                    .node()
+                    .getBoundingClientRect().width - 30) / 3;
+            selected_overlay.selectAll('.sel-row div')
+                .style('width', (lr_width) + 'px')
+                .style('height', (lr_width) + 'px');
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
             update_share_urls();
         }
 
         function close_section(){
             section_view_panel.style('display', 'none');
-            window.location.hash = '';
+            if(history.pushState) {
+                history.replaceState(null, null, '#');
+            } else {
+                window.location.hash = hash;
+            }
             update_share_urls();
         }
 
         function update_share_urls(){
             // Facebook
-
+            section_view_panel.select('.sharing .facebook').attr(
+                'href',
+                fb_url.format(
+                    encodeURIComponent(window.location.href),
+                    encodeURIComponent(window.location.href),
+                    encodeURIComponent('Spokesman Review: View my seat selection at The Mac' )));
             // Twitter
-
+            section_view_panel.select('.sharing .twitter').attr(
+                'href',
+                twitter_url.format(
+                    encodeURIComponent('Spokesman Review: View my seat selection at The Mac' ),
+                    encodeURIComponent(window.location.href)));
             // Email
             section_view_panel.select('.sharing .email').attr(
                 'href',
                 mailto_url.format(
-                    encodeURIComponent('Spokesman: View my seat selection at The Mac' ),
+                    encodeURIComponent('Spokesman Review: View my seat selection at The Mac' ),
                     encodeURIComponent(window.location.href)))
         }
 
@@ -386,7 +415,7 @@ function stadium() {
         /* ============================= */
 
         draw_ui();
-        d3.xml('img/stadium.svg', load_image);
+        d3.xml('https://s3-us-west-2.amazonaws.com/public.spokesman.com/mac-seating-chart/stadium.svg', load_image);
 
         /* ========== DEBUG ========== */
 
