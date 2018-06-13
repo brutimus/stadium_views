@@ -18,7 +18,6 @@ function stadium() {
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})-(\\d{0,2})-(\\d{0,2})-([ulx]?)$'),
         sections = [],
-        lower_upper_cutoff = 14, // Basically, number of rows in lower section
         section_sizes = {
             101: [18, 15],102: [22, 11],103: [25, 32],104: [18, 32],
             105: [18, 32],106: [18, 32],107: [25, 32],108: [22, 14],
@@ -29,6 +28,36 @@ function stadium() {
         section_matricies = {
             // Defines the arrangement of photos taken in each section
             // [lower_sec, upper_sec]
+            'A': [],
+            'B': [],
+            'C': [],
+            'D': [],
+            'E': [],
+            'F': [],
+            'G': [],
+            'H': [],
+            'I': [],
+            'J': [],
+            'K': [],
+            'L': [],
+            'M': [],
+            'N': [],
+            'O': [],
+            'P': [],
+            'LFB1U': [],
+            'LFB1L': [],
+            'LF2U': [],
+            'LF2L': [],
+            'LF3U': [],
+            'LF3L': [],
+            'LF4U': [],
+            'LF4L': [],
+            'RF1': [],
+            'RF2': [],
+            'RF3': [],
+            'RFB2': [],
+            'RFB3': [],
+            
             101: [[3,3,3]],
             102: [[1,2,3], [3]],
             103: [[1,1,2], [2,3,3]],
@@ -75,6 +104,15 @@ function stadium() {
                 activate_view(d3.select(e.target).attr('class'));
             });
             read_url_hash();
+
+            zoom = d3.zoom()
+                .scaleExtent([1, 3])
+                .on("zoom", function () {
+                    content.attr("transform", d3.event.transform)
+                });
+
+            content_group
+                .call(zoom);
         }
 
         function load_image(data){
