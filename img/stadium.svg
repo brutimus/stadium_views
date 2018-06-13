@@ -15,9 +15,9 @@
     <path id="section118" fill="#001F5B" fill-opacity=".5" d="M61.146 355.957V301.05h99.328v8.108l7.77.676v24.663l-12.5 4.73v-8.109l-57.463 24.585z"/>
     <path id="section103" fill="#001F5B" fill-opacity=".5" d="M94.512 29.719l46.704 110.273h28.731v-43.21h10.683V29.719z"/>
     <path id="section107" fill="#001F5B" fill-opacity=".5" d="M503.456 29.719L458.75 139.396h-29.322l-1-42.473-12.089.169V29.719z"/>
-    <path id="section104" fill="#001F5B" fill-opacity=".5" d="M189.839 29.719h67.09v67.063h-17.906v42.614h-34.292l.169-42.614h-15.061z"/>
+    <path id="sectionA" fill="#001F5B" fill-opacity=".5" d="M189.839 29.719h67.09v67.063h-17.906v42.614h-34.292l.169-42.614h-15.061z"/>
     <path id="section106" fill="#001F5B" fill-opacity=".5" d="M340.378 29.719h66.258l-.169 67.063h-13.852v42.614h-33.291V96.782h-18.946z"/>
-    <path id="section105" fill="#001F5B" fill-opacity=".5" d="M265.152 29.043h67.171v67.063h-7.825v43.29H273.99l.169-43.29h-9.007z"/>
+    <path id="sectionB" fill="#001F5B" fill-opacity=".5" d="M265.152 29.043h67.171v67.063h-7.825v43.29H273.99l.169-43.29h-9.007z"/>
     <path id="section103lower" fill="#001F5B" fill-opacity=".5" d="M133.869 142.495h43.551v86.401h-5.122z"/>
     <path id="section107lower" fill="#001F5B" fill-opacity=".5" d="M463.874 142.495h-44.551v86.401h5.122z"/>
     <path id="section104lower" fill="#001F5B" fill-opacity=".5" d="M188.461 142.495h64.637v86.4h-64.637z"/>

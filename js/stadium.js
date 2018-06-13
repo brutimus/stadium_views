@@ -18,26 +18,38 @@ function stadium() {
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})([a-z]{1,2})(\\d{1,2})$'),
         sections = [],
+        // The sections where they only took three horiz. photos
         threeBySections = [],
         section_sizes = {
-            101: [18, 15],
-            102: [22, 11],
-            103: [25, 32],
-            104: [18, 32],
-            105: [18, 32],
-            106: [18, 32],
-            107: [25, 32],
-            108: [22, 14],
-            109: [18, 15],
-            110: [15, 15],
-            111: [22, 14],
-            112: [25, 32],
-            113: [18, 32],
-            114: [18, 32],
-            115: [18, 32],
-            116: [25, 32],
-            117: [22, 11],
-            118: [15, 15]
+            'A': [10,10],
+            'B': [10,10],
+            'C': [10,10],
+            'D': [10,10],
+            'E': [10,10],
+            'F': [10,10],
+            'G': [10,10],
+            'H': [10,10],
+            'I': [10,10],
+            'J': [10,10],
+            'K': [10,10],
+            'L': [10,10],
+            'M': [10,10],
+            'N': [10,10],
+            'O': [10,10],
+            'P': [10,10],
+            'LFB1U': [10,10],
+            'LFB1L': [10,10],
+            'LF2U': [10,10],
+            'LF2L': [10,10],
+            'LF3U': [10,10],
+            'LF3L': [10,10],
+            'LF4U': [10,10],
+            'LF4L': [10,10],
+            'RF1': [10,10],
+            'RF2': [10,10],
+            'RF3': [10,10],
+            'RFB2': [10,10],
+            'RFB3': [10,10],
         },
         row_options = [
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
@@ -70,6 +82,13 @@ function stadium() {
                 e.preventDefault();
                 activate_view(d3.select(e.target).attr('class').split(' ')[0]);
             });
+            container.select('#seat-selector #section')
+                .selectAll('option')
+                .data(Object.keys(section_sizes))
+                .enter()
+                .append('option')
+                .attr('value', function(d){return d})
+                .text(function(d){return d});
             read_url_hash();
         }
 
@@ -79,12 +98,12 @@ function stadium() {
             $.each(svg.selectAll('path')[0], function(index, val) {
                 console.log('foo')
                 var section = d3.select(val),
-                    section_number = section.attr('id').substring(7, 10);
+                    section_number = section.attr('id').replace('section', '');
                 if (section.attr('id') == 'floor'){
                     return
                 }
                 console.log('SECTION:', section_number)
-                sections.push(section_number);
+                // sections.push(section_number);
                 section.datum({'number': section_number});
                 // section.select('g').remove();
                 section.on('mouseover', function(d){
@@ -93,18 +112,11 @@ function stadium() {
                 }).on('mouseout', function(d){
                     $(this).attr('fill', $(this).attr('orig-fill'));
                 }).on('click', function(d){
-                    console.log('click');
-                    container.select('#seat-selector #section').node().value = parseInt(section_number);
-                    view_section(section_number, 'a', 1);
+                    console.log('click: ', section_number);
+                    container.select('#seat-selector #section').node().value = section_number;
+                    view_section(section_number, 1, 1);
                 });
             });
-            container.select('#seat-selector #section')
-                .selectAll('option')
-                .data(sections)
-                .enter()
-                .append('option')
-                .attr('value', function(d){return d})
-                .text(function(d){return d});
         }
 
         function translate_seat_to_photo(section, row, seat){
@@ -115,7 +127,7 @@ function stadium() {
                 x_ratio = (seat / x_size),
                 y_ratio = row_options.indexOf(row) / y_size;
             console.log(section, row, seat)
-            console.log(x_size, y_size, x_ratio, y_ratio)
+            console.log(section_size, x_size, y_size, x_ratio, y_ratio)
             console.log(row_options.indexOf(row) / y_size)
 
             if (x_ratio >= 1 || y_ratio >= 1) {
@@ -129,11 +141,12 @@ function stadium() {
         }
 
         function activate_photo(section, row, seat) {
+            console.log('--> activate_photo()')
             section_photoview = translate_seat_to_photo(section, row, seat);
             if (section_photoview == null) {
                 return false;
             };
-            console.log(section_photoview)
+            console.log('section_photoview: ', section_photoview)
             do_activate_photo(section_photoview[0], section_photoview[1]);
             write_url_hash(section, row, seat);
             return true;
@@ -150,7 +163,7 @@ function stadium() {
         }
 
         function activate_view(view){
-            var section = parseInt(container.select('#seat-selector #section').node().value);
+            var section = container.select('#seat-selector #section').node().value;
             do_activate_photo(section, view);
         }
 
@@ -159,7 +172,7 @@ function stadium() {
             console.log(hash)
             if (hash_re.test(hash)) {
                 var matches = hash_re.exec(hash),
-                    section = parseInt(matches[1]),
+                    section = matches[1],
                     row = matches[2],
                     seat = parseInt(matches[3]);
                 container.select('#seat-selector #section').node().value = section;
@@ -171,19 +184,18 @@ function stadium() {
             window.location.hash = section + row + seat;
         }
 
-        function view_section(number, row, seat){
-            console.log(number, row, seat);
-            var number = parseInt(number),
-                result = activate_photo(number, row, seat);
+        function view_section(sec, row, seat){
+            console.log(sec, row, seat);
+            var result = activate_photo(sec, row, seat);
             if (!result) {
                 show_error("Please select a valid seat");
                 return
             };
-            console.log(diagram_url.format(number))
-            section_view_panel.select('.diagram img').attr('src', diagram_url.format(number));
-            section_view_panel.select('.title').text('Section ' + number);
+            console.log(diagram_url.format(sec))
+            section_view_panel.select('.diagram img').attr('src', diagram_url.format(sec));
+            section_view_panel.select('.title').text('Section ' + sec);
             section_view_panel.selectAll('.viewSelector > div').classed('active', false);
-            if (threeBySections.indexOf(number) > -1) {
+            if (threeBySections.indexOf(sec) > -1) {
                 section_view_panel.select('.viewSelector > .threeBy').classed('active', true);
             } else {
                 section_view_panel.select('.viewSelector > .nineBy').classed('active', true);
