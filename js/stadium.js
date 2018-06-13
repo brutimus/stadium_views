@@ -20,15 +20,28 @@ function stadium() {
         sections = [],
         threeBySections = [],
         section_sizes = {
-            101: [18, 15],102: [22, 11],103: [25, 32],104: [18, 32],
-            105: [18, 32],106: [18, 32],107: [25, 32],108: [22, 14],
-            109: [18, 15],110: [15, 15],111: [22, 14],112: [25, 32],
-            113: [18, 32],114: [18, 32],115: [18, 32],116: [25, 32],
-            117: [22, 11],118: [15, 15]
+            101: [18, 15],
+            102: [22, 11],
+            103: [25, 32],
+            104: [18, 32],
+            105: [18, 32],
+            106: [18, 32],
+            107: [25, 32],
+            108: [22, 14],
+            109: [18, 15],
+            110: [15, 15],
+            111: [22, 14],
+            112: [25, 32],
+            113: [18, 32],
+            114: [18, 32],
+            115: [18, 32],
+            116: [25, 32],
+            117: [22, 11],
+            118: [15, 15]
         },
         row_options = [
-            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
-            19,20,21,22,23,24,25,26,27,28,29,30,31,32
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
         ],
         view_x_options = ['l', 'm', 'r'],
         view_y_options = ['l', 'm', 't'],
@@ -63,18 +76,24 @@ function stadium() {
         function load_image(data){
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(svg.select('#sections').selectAll('#sections > g')[0], function(index, val) {
+            $.each(svg.selectAll('path')[0], function(index, val) {
+                console.log('foo')
                 var section = d3.select(val),
                     section_number = section.attr('id').substring(7, 10);
+                if (section.attr('id') == 'floor'){
+                    return
+                }
+                console.log('SECTION:', section_number)
                 sections.push(section_number);
                 section.datum({'number': section_number});
-                section.select('g').remove();
-                section.select('path').on('mouseover', function(d){
+                // section.select('g').remove();
+                section.on('mouseover', function(d){
                     $(this).attr('orig-fill', $(this).attr('fill'));
                     $(this).attr('fill', 'red');
                 }).on('mouseout', function(d){
                     $(this).attr('fill', $(this).attr('orig-fill'));
                 }).on('click', function(d){
+                    console.log('click');
                     container.select('#seat-selector #section').node().value = parseInt(section_number);
                     view_section(section_number, 'a', 1);
                 });
