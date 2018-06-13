@@ -20,7 +20,8 @@ function stadium() {
         sections = [],
         section_sizes = {
             'A': [10,10],
-            'B': [10,10],
+            'Bu': [10,10],
+            'Bl': [10,10],
             'C': [10,10],
             'D': [10,10],
             'E': [10,10],
@@ -117,7 +118,8 @@ function stadium() {
             // SVG as well.
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(d3.selectAll('#sections > g > polygon').nodes(), function(index, val) {
+            $.each(d3.selectAll('#sections > *').nodes(), function(index, val) {
+                console.log(val);
                 var section = d3.select(val),
                     section_number = section.attr('id').replace('section', '');
                 if (section.attr('id') == 'floor'){
@@ -127,16 +129,11 @@ function stadium() {
                 // sections.push(section_number);
                 section.datum({'number': section_number});
                 section.on('mouseover', function(d){
-                    var self = d3.select(this);
-                    self.selectAll('polygon,rect').attr(
-                        'orig-fill',
-                        self.selectAll('polygon,rect').attr('fill'));
-                    self.selectAll('polygon,rect').attr('fill', 'red');
+                    // console.log('hover, ', this);
+                    $(this).attr('orig-fill', $(this).attr('fill'));
+                    $(this).attr('fill', 'red');
                 }).on('mouseout', function(d){
-                    var self = d3.select(this);
-                    self.selectAll('polygon,rect').attr(
-                        'fill',
-                        self.selectAll('polygon,rect').attr('orig-fill'));
+                    $(this).attr('fill', $(this).attr('orig-fill'));
                 }).on('click', function(d){
                     container.select('#seat-selector #section').node().value = section_number;
                     view_section(section_number, '', '');
@@ -170,7 +167,7 @@ function stadium() {
             return [
                 section,
                 view_y_options[Math.min(Math.floor(y_ratio * 3), 2)] +
-                ((threeBySections.indexOf(section) > -1) ? 'm' : view_x_options[Math.min(Math.floor(x_ratio * 3), 2)])
+                view_x_options[Math.min(Math.floor(x_ratio * 3), 2)]
             ];
         }
 
