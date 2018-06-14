@@ -17,60 +17,244 @@ function stadium() {
         photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
-        sections = [],
-        lower_upper_cutoff = 14, // Basically, number of rows in lower section
+        section_metadata = {
+            'A': {
+                'name': 'A',
+                'rows': 10,
+                'columns': 17,
+                'photos':
+            },
+            'B': {
+                'name': 'B',
+                'rows': 10,
+                'columns': 16,
+                'photos':
+            },
+            'C': {
+                'name': 'C',
+                'rows': 10,
+                'columns': 16,
+                'photos':
+            },
+            'D': {
+                'name': 'D',
+                'rows': 9,
+                'columns': 15,
+                'photos':
+            },
+            'E': {
+                'name': 'E',
+                'rows': 9,
+                'columns': 16,
+                'photos':
+            },
+            'F': {
+                'name': 'F',
+                'rows': 9,
+                'columns': 15,
+                'photos':
+            },
+            'G': {
+                'name': 'G',
+                'rows': 8,
+                'columns': 14,
+                'photos':
+            },
+            'H': {
+                'name': 'H',
+                'rows': 8,
+                'columns': 16,
+                'photos':
+            },
+            'I': {
+                'name': 'I',
+                'rows': 8,
+                'columns': 14,
+                'photos':
+            },
+            'J': {
+                'name': 'J',
+                'rows': 9,
+                'columns': 15,
+                'photos':
+            },
+            'K': {
+                'name': 'K',
+                'rows': 9,
+                'columns': 16,
+                'photos':
+            },
+            'L': {
+                'name': 'L',
+                'rows': 9,
+                'columns': 15,
+                'photos':
+            },
+            'M': {
+                'name': 'M',
+                'rows': 10,
+                'columns': 15,
+                'photos':
+            },
+            'N': {
+                'name': 'N',
+                'rows': 10,
+                'columns': 16,
+                'photos':
+            },
+            'O': {
+                'name': 'O',
+                'rows': 10,
+                'columns': 17,
+                'photos':
+            },
+            'P': {
+                'name': 'P',
+                'rows': 10,
+                'columns': 18,
+                'photos':
+            },
+            'LF1': {
+                'name': 'LF1',
+                'rows': 10,
+                'columns': 18,
+                'photos':
+            },
+            'LFB1': {
+                'name': 'LFB1',
+                'rows': 6,
+                'columns': 18,
+                'photos':
+            },
+            'LF2': {
+                'name': 'LF2',
+                'rows': 19,
+                'columns': 27,
+                'photos':
+            },
+            'LLF2': {
+                'name': 'LLF2',
+                'rows': 6,
+                'columns': 27,
+                'photos':
+            },
+            'LF3': {
+                'name': 'LF3',
+                'rows': 19,
+                'columns': 18,
+                'photos':
+            },
+            'LLF3': {
+                'name': 'LLF3',
+                'rows': 7,
+                'columns': 18,
+                'photos':
+            },
+            'LF4': {
+                'name': 'LF4',
+                'rows': 19,
+                'columns': 23,
+                'photos':
+            },
+            'LLF4': {
+                'name': 'LLF4',
+                'rows': 7,
+                'columns': 23,
+                'photos':
+            },
+            'RF1': {
+                'name': 'RF1',
+                'rows': 19,
+                'columns': 27,
+                'photos':
+            },
+            'RF2': {
+                'name': 'RF2',
+                'rows': 19,
+                'columns': 18,
+                'photos':
+            },
+            'RFB2': {
+                'name': 'RFB2',
+                'rows': 6,
+                'columns': 14,
+                'photos':
+            },
+            'RF3': {
+                'name': 'RF3',
+                'rows': 19,
+                'columns': 23,
+                'photos':
+            },
+            'RFB3': {
+                'name': 'RFB3',
+                'rows': 6,
+                'columns': 18,
+                'photos':
+            },
+        }
         section_sizes = {
-            'A': [10,10],
-            'Bu': [10,10],
-            'Bl': [10,10],
-            'C': [10,10],
-            'D': [10,10],
-            'E': [10,10],
-            'F': [10,10],
-            'G': [10,10],
-            'H': [10,10],
-            'I': [10,10],
-            'J': [10,10],
-            'K': [10,10],
-            'L': [10,10],
-            'M': [10,10],
-            'N': [10,10],
-            'O': [10,10],
-            'P': [10,10],
-            'LFB1U': [10,10],
-            'LFB1L': [10,10],
-            'LF2U': [10,10],
-            'LF2L': [10,10],
-            'LF3U': [10,10],
-            'LF3L': [10,10],
-            'LF4U': [10,10],
-            'LF4L': [10,10],
-            'RF1': [10,10],
-            'RF2': [10,10],
-            'RF3': [10,10],
-            'RFB2': [10,10],
-            'RFB3': [10,10],
+            'A': [17, 10],
+            'B': [16, 10],
+            'C': [16, 10],
+            'D': [15, 9],
+            'E': [16, 9],
+            'F': [15, 9],
+            'G': [14, 8],
+            'H': [16, 8],
+            'I': [14, 8],
+            'J': [15, 9],
+            'K': [16, 9],
+            'L': [15, 9],
+            'M': [15, 10],
+            'N': [16, 10],
+            'O': [17, 10],
+            'P': [18, 10],
+            'LF1': [18, 10],
+            'LFB1': [18, 6],
+            'LF2': [27, 19],
+            'LLF2': [27, 6],
+            'LF3': [18, 19],
+            'LLF3': [18, 7],
+            'LF4': [23, 19],
+            'LLF4': [23, 7],
+            'RF1': [27, 19],
+            'RF2': [18, 19],
+            'RFB2': [14, 6],
+            'RF3': [23, 19],
+            'RFB3': [18, 6],
         },
         section_matricies = {
-            '101': [3,3,3],
-            '102': [1,2,3],
-            '103': [1,1,2],
-            '104': [3,3,3],
-            'Bu': [3,3,3],
-            '106': [3,3,3],
-            '107': [1,1,2],
-            '108': [1,2,3],
-            '109': [3,3,3],
-            '110': [3,3,3],
-            '111': [1,2,3],
-            '112': [1,1,2],
-            '113': [3,3,3],
-            '114': [3,3,3],
-            '115': [3,3,3],
-            '116': [1,1,2],
-            '117': [1,2,3],
-            '118': [3,3,3]},
-        view_x_options = ['l', 'c', 'r'],
+            'A': [3, 3, 3],
+            'B': [3, 3, 3],
+            'C': [3, 3, 3],
+            'D': [3, 3, 3],
+            'E': [3, 3, 3],
+            'F': [3, 3, 3],
+            'G': [3, 3, 3],
+            'H': [3, 3, 3],
+            'I': [3, 3, 3],
+            'J': [3, 3, 3],
+            'K': [3, 3, 3],
+            'L': [3, 3, 3],
+            'M': [3, 3, 3],
+            'N': [3, 3, 3],
+            'O': [3, 3, 3],
+            'P': [3, 3, 3],
+            'LF1': [2, 2, 2],
+            'LFB1': [2, 2, 2],
+            'LF2': [3, 3, 3],
+            'LLF2': [2, 2, 2],
+            'LF3': [3, 3, 3],
+            'LLF3': [2, 2, 2],
+            'LF4': [3, 3, 3],
+            'LLF4': [2, 2, 2],
+            'RF1': [3, 3, 3],
+            'RF2': [3, 3, 3],
+            'RFB2': [2, 2, 2],
+            'RF3': [3, 3, 3],
+            'RFB3': [2, 2, 2],
+        },
         view_y_options = ['b', 'm', 't'],
         error_state = false;
 
