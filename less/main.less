@@ -185,10 +185,13 @@ body {
 
 .container {
 	position: relative;
+	max-width: 600px;
+	max-height: 900px;
+	height: 900px;
 
 	.canvas {
 		width: 100%;
-		height: 400px;
+		height: 100%;
 	}
 	.section-view-panel {
 		width: 100%;
@@ -207,7 +210,7 @@ body {
 			position: absolute;
 			top: 5px;
 			right: 15px;
-			color: white;
+			color: black;
 			cursor: pointer;
 		}
 
@@ -220,6 +223,7 @@ body {
 			}
 			table {
 				margin-top: 10px;
+				width: 100%;
 
 				td {
 					white-space: nowrap;
@@ -283,30 +287,18 @@ body {
 					top: 32px;
 					left: 0;
 
-					.threeBy, .nineBy {
-						width: 100%;
-						height: 100%;
-						display: none;
-					}
-					.threeBy.active, .nineBy.active {
-						display: block;
-					}
-					.threeBy > div, .nineBy > div {
-						background-color: rgba(0,0,0,.2);
-						box-sizing: border-box;
-						border-radius: 100%;
-						height: 33%;
-						width: 33%;
-						float: left;
-					}
-					.threeBy > div.active, .nineBy > div.active {
-						background-color: rgba(0,0,0,.6);
-					}
-					.threeBy > div {
-						clear: both;
-						margin-left: 33%;
-					}
-					.nineBy > div {
+					.selectorRow {
+						div {
+							background-color: rgba(0,0,0,.2);
+							box-sizing: border-box;
+							border-radius: 100%;
+							height: 30px;
+							width: 30px;
+							float: left;
+						}
+						div.active {
+							background-color: rgba(0,0,0,.6);
+						}
 					}
 				}
 			}

@@ -360,11 +360,11 @@ function stadium() {
                 view_section(e.target[0].value, e.target[1].value, e.target[2].value);
             })
             section_view_panel.select('.close-button').on('click', close_section);
-            section_view_panel.selectAll('.viewSelector > div > div').on('click', function(){
-                var e = d3.event;
-                e.preventDefault();
-                activate_view(d3.select(e.target).attr('class').split(' ')[0]);
-            });
+            // section_view_panel.selectAll('.viewSelector > div > div').on('click', function(){
+            //     var e = d3.event;
+            //     e.preventDefault();
+            //     activate_view(d3.select(e.target).attr('class').split(' ')[0]);
+            // });
             container.select('#seat-selector #section')
                 .on('change', update_rows_seats_options)
                 .selectAll('option')
@@ -485,13 +485,13 @@ function stadium() {
             if (section_photoview == null) {
                 return false;
             };
-            // console.log(section_photoview)
             do_activate_photo(section_photoview);
             write_url_hash(section, row, seat);
             return true;
         }
 
         function do_activate_photo(photo_params){
+            console.log('do_activate_photo(): ', photo_params);
             section_view_panel.select('.photo').attr(
                 'src', photo_url.format(
                     photo_params[0],   // Section
@@ -501,7 +501,7 @@ function stadium() {
 
         function activate_view(view){
             var section = container.select('#seat-selector #section').node().value;
-            do_activate_photo(section, view);
+            do_activate_photo([section, view[0], view[1]]);
         }
 
         function read_url_hash(){
@@ -544,6 +544,54 @@ function stadium() {
             section_view_panel.select('.title').text('Section ' + sec);
             section_view_panel.style('display', 'block');
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
+
+            //TODO: Fix this so that it can be variable, for this graphic all
+            // sections have three columns.
+            switch (section_metadata[sec].photos[0]) {
+                case 1:
+                    selector_x_options = []
+                    break;
+                case 2:
+                    selector_x_options = ['l', 'r']
+                    break;
+                case 3:
+                    selector_x_options = ['l', 'c', 'r']
+                    break;
+            }
+
+            switch (section_metadata[sec].photos.length) {
+                case 1:
+                    selector_y_options = []
+                    break;
+                case 2:
+                    selector_y_options = ['b', 't']
+                    break;
+                case 3:
+                    selector_y_options = ['b', 'm', 't']
+                    break;
+            }
+
+            var touch_options = selector_y_options.map(function(dy){
+                return selector_x_options.map(function(dx){
+                    return dy + dx
+                })
+            })
+            console.log(touch_options);
+
+            var row_divs = d3.select('.diagram .viewSelector')
+                .html(null)
+                .selectAll('div')
+                .data(touch_options)
+                .enter()
+                    .append('div')
+                    .attr('class', 'selectorRow');
+
+            row_divs.selectAll('div')
+                .data(function(d){return d})
+                .enter()
+                    .append('div')
+                    .attr('class', function(d){return d})
+                    .on('click', activate_view);
         }
 
         function update_rows_seats_options(){

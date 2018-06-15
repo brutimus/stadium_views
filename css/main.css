@@ -145,19 +145,22 @@ body {
   outline: none;
 }
 #content-background {
-  fill: #ffffff;
+  fill: #fff;
 }
 .container {
   position: relative;
+  max-width: 600px;
+  max-height: 900px;
+  height: 900px;
 }
 .container .canvas {
   width: 100%;
-  height: 400px;
+  height: 100%;
 }
 .container .section-view-panel {
   width: 100%;
   height: 100vh;
-  background-color: #5e8ab4;
+  background-color: #5E8AB4;
   box-sizing: border-box;
   display: none;
   position: absolute;
@@ -171,7 +174,7 @@ body {
   position: absolute;
   top: 5px;
   right: 15px;
-  color: white;
+  color: black;
   cursor: pointer;
 }
 .container .section-view-panel .section-details {
@@ -182,6 +185,7 @@ body {
 }
 .container .section-view-panel .section-details table {
   margin-top: 10px;
+  width: 100%;
 }
 .container .section-view-panel .section-details table td {
   white-space: nowrap;
@@ -250,32 +254,16 @@ body {
   top: 32px;
   left: 0;
 }
-.container .section-view-panel .section-details .diagram .viewSelector .threeBy,
-.container .section-view-panel .section-details .diagram .viewSelector .nineBy {
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-.container .section-view-panel .section-details .diagram .viewSelector .threeBy.active,
-.container .section-view-panel .section-details .diagram .viewSelector .nineBy.active {
-  display: block;
-}
-.container .section-view-panel .section-details .diagram .viewSelector .threeBy > div,
-.container .section-view-panel .section-details .diagram .viewSelector .nineBy > div {
+.container .section-view-panel .section-details .diagram .viewSelector .selectorRow div {
   background-color: rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   border-radius: 100%;
-  height: 33%;
-  width: 33%;
+  height: 30px;
+  width: 30px;
   float: left;
 }
-.container .section-view-panel .section-details .diagram .viewSelector .threeBy > div.active,
-.container .section-view-panel .section-details .diagram .viewSelector .nineBy > div.active {
+.container .section-view-panel .section-details .diagram .viewSelector .selectorRow div.active {
   background-color: rgba(0, 0, 0, 0.6);
-}
-.container .section-view-panel .section-details .diagram .viewSelector .threeBy > div {
-  clear: both;
-  margin-left: 33%;
 }
 .container .error {
   position: absolute;
