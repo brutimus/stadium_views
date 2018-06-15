@@ -13,249 +13,331 @@ if (!String.prototype.format) {
 }
 
 function stadium() {
-    var diagram_url = 'img/sections/angels_SEC{0}.png',
-        photo_url = 'img/photos/{0}{1}{2}{3}.jpg',
+    var diagram_url = 'img/sections/{0}.png',
+        photo_url = 'img/photos/{0}{1}{2}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
-        hash_re = new RegExp('^#(\\d{3})-(\\d{1,2})-(\\d{1,2})$'),
+        hash_re = new RegExp('^#([a-z0-9]+)-(\\d+)-(\\d+)$'),
         section_metadata = {
-            'A': {
-                'name': 'A',
+            'a': {
+                'name': 'Section A',
                 'rows': 10,
                 'columns': 17,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'B': {
-                'name': 'B',
+            'b': {
+                'name': 'Section B',
                 'rows': 10,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'C': {
-                'name': 'C',
+            'c': {
+                'name': 'Section C',
                 'rows': 10,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'D': {
-                'name': 'D',
+            'd': {
+                'name': 'Section D',
                 'rows': 9,
                 'columns': 15,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'E': {
-                'name': 'E',
+            'e': {
+                'name': 'Section E',
                 'rows': 9,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'F': {
-                'name': 'F',
+            'f': {
+                'name': 'Section F',
                 'rows': 9,
                 'columns': 15,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'G': {
-                'name': 'G',
+            'g': {
+                'name': 'Section G',
                 'rows': 8,
                 'columns': 14,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'H': {
-                'name': 'H',
+            'h': {
+                'name': 'Section H',
                 'rows': 8,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'I': {
-                'name': 'I',
+            'i': {
+                'name': 'Section I',
                 'rows': 8,
                 'columns': 14,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'J': {
-                'name': 'J',
+            'j': {
+                'name': 'Section J',
                 'rows': 9,
                 'columns': 15,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'K': {
-                'name': 'K',
+            'k': {
+                'name': 'Section K',
                 'rows': 9,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'L': {
-                'name': 'L',
+            'l': {
+                'name': 'Section L',
                 'rows': 9,
                 'columns': 15,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'M': {
-                'name': 'M',
+            'm': {
+                'name': 'Section M',
                 'rows': 10,
                 'columns': 15,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'N': {
-                'name': 'N',
+            'n': {
+                'name': 'Section N',
                 'rows': 10,
                 'columns': 16,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'O': {
-                'name': 'O',
+            'o': {
+                'name': 'Section O',
                 'rows': 10,
                 'columns': 17,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'P': {
-                'name': 'P',
+            'p': {
+                'name': 'Section P',
                 'rows': 10,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'LF1': {
-                'name': 'LF1',
+            'lf1': {
+                'name': 'Section LF1',
                 'rows': 10,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3]
             },
-            'LFB1': {
-                'name': 'LFB1',
+            'lfb1': {
+                'name': 'Section LFB1',
                 'rows': 6,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3]
             },
-            'LF2': {
-                'name': 'LF2',
+            'lf2': {
+                'name': 'Section LF2',
                 'rows': 19,
                 'columns': 27,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'LLF2': {
-                'name': 'LLF2',
+            'llf2': {
+                'name': 'Section LLF2',
                 'rows': 6,
                 'columns': 27,
-                'photos':
+                'photos': [3, 3]
             },
-            'LF3': {
-                'name': 'LF3',
+            'lf3': {
+                'name': 'Section LF3',
                 'rows': 19,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'LLF3': {
-                'name': 'LLF3',
+            'llf3': {
+                'name': 'Section LLF3',
                 'rows': 7,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3]
             },
-            'LF4': {
-                'name': 'LF4',
+            'lf4': {
+                'name': 'Section LF4',
                 'rows': 19,
                 'columns': 23,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'LLF4': {
-                'name': 'LLF4',
+            'llf4': {
+                'name': 'Section LLF4',
                 'rows': 7,
                 'columns': 23,
-                'photos':
+                'photos': [3, 3]
             },
-            'RF1': {
-                'name': 'RF1',
+            'rf1': {
+                'name': 'Section RF1',
                 'rows': 19,
                 'columns': 27,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'RF2': {
-                'name': 'RF2',
+            'rf2': {
+                'name': 'Section RF2',
                 'rows': 19,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'RFB2': {
-                'name': 'RFB2',
+            'rfb2': {
+                'name': 'Section RFB2',
                 'rows': 6,
                 'columns': 14,
-                'photos':
+                'photos': [3, 3]
             },
-            'RF3': {
-                'name': 'RF3',
+            'rf3': {
+                'name': 'Section RF3',
                 'rows': 19,
                 'columns': 23,
-                'photos':
+                'photos': [3, 3, 3]
             },
-            'RFB3': {
-                'name': 'RFB3',
+            'rfb3': {
+                'name': 'Section RFB3',
                 'rows': 6,
                 'columns': 18,
-                'photos':
+                'photos': [3, 3]
             },
-        }
-        section_sizes = {
-            'A': [17, 10],
-            'B': [16, 10],
-            'C': [16, 10],
-            'D': [15, 9],
-            'E': [16, 9],
-            'F': [15, 9],
-            'G': [14, 8],
-            'H': [16, 8],
-            'I': [14, 8],
-            'J': [15, 9],
-            'K': [16, 9],
-            'L': [15, 9],
-            'M': [15, 10],
-            'N': [16, 10],
-            'O': [17, 10],
-            'P': [18, 10],
-            'LF1': [18, 10],
-            'LFB1': [18, 6],
-            'LF2': [27, 19],
-            'LLF2': [27, 6],
-            'LF3': [18, 19],
-            'LLF3': [18, 7],
-            'LF4': [23, 19],
-            'LLF4': [23, 7],
-            'RF1': [27, 19],
-            'RF2': [18, 19],
-            'RFB2': [14, 6],
-            'RF3': [23, 19],
-            'RFB3': [18, 6],
+            'skybox3': {
+                'name': 'Skybox 3',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox4': {
+                'name': 'Skybox 4',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox5': {
+                'name': 'Skybox 5',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox6': {
+                'name': 'Skybox 6',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox7': {
+                'name': 'Skybox 7',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox8': {
+                'name': 'Skybox 8',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox9': {
+                'name': 'Skybox 9',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox10': {
+                'name': 'Skybox 10',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox11': {
+                'name': 'Skybox 11',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox12': {
+                'name': 'Skybox 12',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox13': {
+                'name': 'Skybox 13',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox14': {
+                'name': 'Skybox 14',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox15': {
+                'name': 'Skybox 15',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox16': {
+                'name': 'Skybox 16',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox17': {
+                'name': 'Skybox 17',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox18': {
+                'name': 'Skybox 18',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox19': {
+                'name': 'Skybox 19',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox20': {
+                'name': 'Skybox 20',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox21': {
+                'name': 'Skybox 21',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox22': {
+                'name': 'Skybox 22',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox23': {
+                'name': 'Skybox 23',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox24': {
+                'name': 'Skybox 24',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox25': {
+                'name': 'Skybox 25',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+            'skybox26': {
+                'name': 'Skybox 26',
+                'rows': 1,
+                'columns': 1,
+                'photos': [1]
+            },
+
         },
-        section_matricies = {
-            'A': [3, 3, 3],
-            'B': [3, 3, 3],
-            'C': [3, 3, 3],
-            'D': [3, 3, 3],
-            'E': [3, 3, 3],
-            'F': [3, 3, 3],
-            'G': [3, 3, 3],
-            'H': [3, 3, 3],
-            'I': [3, 3, 3],
-            'J': [3, 3, 3],
-            'K': [3, 3, 3],
-            'L': [3, 3, 3],
-            'M': [3, 3, 3],
-            'N': [3, 3, 3],
-            'O': [3, 3, 3],
-            'P': [3, 3, 3],
-            'LF1': [2, 2, 2],
-            'LFB1': [2, 2, 2],
-            'LF2': [3, 3, 3],
-            'LLF2': [2, 2, 2],
-            'LF3': [3, 3, 3],
-            'LLF3': [2, 2, 2],
-            'LF4': [3, 3, 3],
-            'LLF4': [2, 2, 2],
-            'RF1': [3, 3, 3],
-            'RF2': [3, 3, 3],
-            'RFB2': [2, 2, 2],
-            'RF3': [3, 3, 3],
-            'RFB3': [2, 2, 2],
-        },
-        view_y_options = ['b', 'm', 't'],
         error_state = false;
 
     function my(selection) {
@@ -284,12 +366,14 @@ function stadium() {
                 activate_view(d3.select(e.target).attr('class').split(' ')[0]);
             });
             container.select('#seat-selector #section')
+                .on('change', update_rows_seats_options)
                 .selectAll('option')
-                .data(Object.keys(section_sizes))
+                .data(d3.entries(section_metadata))
                 .enter()
-                .append('option')
-                .attr('value', function(d){return d})
-                .text(function(d){return d});
+                    .append('option')
+                    .attr('value', function(d){return d.key})
+                    .text(function(d){return d.value.name});
+            update_rows_seats_options();
             read_url_hash();
         }
 
@@ -299,23 +383,13 @@ function stadium() {
             // SVG as well.
             var svgNode = data.getElementsByTagName("svg")[0];
             content.node().appendChild(svgNode);
-            $.each(d3.selectAll('#sections > *').nodes(), function(index, val) {
+            $.each(d3.selectAll('#sections > g').nodes(), function(index, val) {
                 console.log(val);
                 var section = d3.select(val),
-                    section_number = section.attr('id').replace('section', '');
-                if (section.attr('id') == 'floor'){
-                    return
-                }
+                    section_number = section.attr('id');
                 console.log('SECTION:', section_number)
-                // sections.push(section_number);
                 section.datum({'number': section_number});
-                section.on('mouseover', function(d){
-                    // console.log('hover, ', this);
-                    $(this).attr('orig-fill', $(this).attr('fill'));
-                    $(this).attr('fill', 'red');
-                }).on('mouseout', function(d){
-                    $(this).attr('fill', $(this).attr('orig-fill'));
-                }).on('click', function(d){
+                section.on('click', function(d){
                     container.select('#seat-selector #section').node().value = section_number;
                     view_section(section_number, '', '');
                 });
@@ -331,16 +405,17 @@ function stadium() {
             // console.log('z', section, row, seat)
             // console.log(typeof(row), typeof(seat))
 
-            var section_size = section_sizes[section],
-                section_matrix = section_matricies[section],
-                x_size = section_size[0],
-                y_size = section_size[1],
+            var section_config = section_metadata[section],
+                x_size = section_config.columns,
+                y_size = section_config.rows,
                 seat = !isNaN(parseInt(seat)) ? +seat : (x_size / 2),
                 row = !isNaN(parseInt(row)) ? +row : Math.floor(y_size / 2),
                 x_ratio = (seat / x_size),
                 y_ratio = row / y_size,
                 photo_x,
-                photo_y, photo_y_index;
+                photo_y, photo_y_index,
+                x_photo_positions,
+                y_photo_positions = section_config.photos.length;
 
             // Test to see if selected row/seat are out of bounds
             if (x_ratio > 1 || y_ratio > 1) {
@@ -348,11 +423,27 @@ function stadium() {
             };
 
             // Calculate photo-y
-            photo_y_index = Math.min(Math.floor(y_ratio * 3), 2);
-            photo_y = view_y_options[photo_y_index];
+            console.log('y_ratio: ', y_ratio)
+            console.log('y_index: ', Math.floor(y_ratio * y_photo_positions))
+
+            photo_y_index = Math.floor(y_ratio * y_photo_positions);
+
+            switch (y_photo_positions) {
+                case 1:
+                    photo_y = '';
+                    break;
+                case 2:
+                    photo_y = ['b', 't'][photo_y_index]
+                    break;
+                case 3:
+                    photo_y = ['b', 'm', 't'][photo_y_index]
+                    break;
+            }
+
+            x_photo_positions = section_config.photos[photo_y_index];
 
             // Calculate photo-x
-            switch (section_matrix[photo_y_index]) {
+            switch (x_photo_positions) {
                 case 1:
                     photo_x = '';
                     break;
@@ -380,6 +471,7 @@ function stadium() {
         function activate_photo(section, row, seat) {
             console.log('--> activate_photo()')
             section_photoview = translate_seat_to_photo(section, row, seat);
+            console.log('activate_photo().section_photoview: ', section_photoview);
             if (section_photoview == null) {
                 return false;
             };
@@ -393,8 +485,8 @@ function stadium() {
             section_view_panel.select('.photo').attr(
                 'src', photo_url.format(
                     photo_params[0],   // Section
-                    photo_params[2],   // Photo Y
-                    photo_params[3])); // Photo X
+                    photo_params[1],   // Photo Y
+                    photo_params[2])); // Photo X
         }
 
         function activate_view(view){
@@ -444,6 +536,34 @@ function stadium() {
             jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
         }
 
+        function update_rows_seats_options(){
+            // Handles the updating of the seat and row dropdowns depending
+            // on which section is selected.
+            var selected = d3.select('#section').property('value');
+                section_config = section_metadata[selected],
+                rows = section_config.rows,
+                seats = section_config.columns;
+            console.log(selected, rows, seats)
+
+            d3.select('#seat-selector #row')
+                .html(null)
+                .selectAll('option')
+                .data(d3.range(1, rows + 1))
+                .enter()
+                    .append('option')
+                    .attr('value', function(d){return d})
+                    .text(function(d){return 'Row ' + d});
+            
+            d3.select('#seat-selector #seat')
+                .html(null)
+                .selectAll('option')
+                .data(d3.range(1, seats + 1))
+                .enter()
+                    .append('option')
+                    .attr('value', function(d){return d})
+                    .text(function(d){return 'Seat ' + d});
+        }
+
         function close_section(){
             // Closes the section overlay.
             section_view_panel.style('display', 'none');
@@ -461,7 +581,7 @@ function stadium() {
             section_view_panel.select('.sharing .email').attr(
                 'href',
                 mailto_url.format(
-                    encodeURIComponent('Spokesman: View my seat selection at The Mac' ),
+                    encodeURIComponent('Spokesman: View my seat selection' ),
                     encodeURIComponent(window.location.href)))
         }
 
@@ -479,18 +599,12 @@ function stadium() {
             error_state = false;
         }
 
-
-        /* ========== VARIABLES & FUNCTIONS ========== */
-        var spreadsheet_url = '',
-            // svg,
-
-
         /* ========== SETUP SVG ========== */
 
         container = selection,
         svg = selection.select('.canvas'),
         section_view_panel = selection.select('.section-view-panel'),
-        error_pane = jQuery('.error').fadeOut();
+        // error_pane = jQuery('.error').fadeOut();
 
         /* ============================= */
         /* ========== RUNTIME ========== */
