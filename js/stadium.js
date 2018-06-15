@@ -15,6 +15,8 @@ if (!String.prototype.format) {
 function stadium() {
     var diagram_url = 'img/sections/{0}.png',
         photo_url = 'img/photos/{0}{1}{2}.jpg',
+        fb_url = 'https://www.facebook.com/dialog/feed?link={0}&app_id=316254480466&redirect_uri={1}&caption={2}',
+        twitter_url = 'https://twitter.com/share?text={0}&url={1}',
         mailto_url = 'mailto:?subject={0}&body={1}',
         hash_re = new RegExp('^#([a-z0-9]+)-(\\d*)-(\\d*)$'),
         section_metadata = {
@@ -539,8 +541,19 @@ function stadium() {
         }
         function write_url_hash(section, row, seat){
             // Writes the permalink hash to the URL
-            console.log('write_url_hash: ', section, row, seat);
-            window.location.hash = section + '-' + row + '-' + seat||'';
+            var hash = '#' + (
+                (section || '') + '-' +
+                (row || '') + '-' +
+                (seat || '') + '-');
+            console.log('write_url_hash: ', hash);
+
+            if(history.pushState) {
+                history.replaceState(null, null, hash);
+            } else {
+                window.location.hash = hash;
+            }
+
+            update_share_urls();
         }
 
         function view_section(sec, row, seat){
@@ -639,23 +652,35 @@ function stadium() {
         function close_section(){
             // Closes the section overlay.
             section_view_panel.style('display', 'none');
-            window.location.hash = '';
+            if(history.pushState) {
+                history.replaceState(null, null, '#');
+            } else {
+                window.location.hash = hash;
+            }
         }
 
-        function update_share_urls(section, view){
-            // Handles updating all the share URLs with the permalink for the
-            // selected seat.
+        function update_share_urls() {
             // Facebook
-
+            section_view_panel.select('.sharing .facebook').attr(
+                'href',
+                fb_url.format(
+                    encodeURIComponent(window.location.href),
+                    encodeURIComponent(window.location.href),
+                    encodeURIComponent('Spokesman Review: View my seat selection at Avista Stadium!')));
             // Twitter
-
+            section_view_panel.select('.sharing .twitter').attr(
+                'href',
+                twitter_url.format(
+                    encodeURIComponent('Spokesman Review: View my seat selection at Avista Stadium!'),
+                    encodeURIComponent(window.location.href)));
             // Email
             section_view_panel.select('.sharing .email').attr(
                 'href',
                 mailto_url.format(
-                    encodeURIComponent('Spokesman: View my seat selection' ),
+                    encodeURIComponent('Spokesman Review: View my seat selection at Avista Stadium!'),
                     encodeURIComponent(window.location.href)))
         }
+
 
         function show_error(msg){
             if (error_state === false) {
