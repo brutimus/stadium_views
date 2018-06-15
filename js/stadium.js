@@ -375,6 +375,16 @@ function stadium() {
                     .text(function(d){return d.value.name});
             update_rows_seats_options();
             read_url_hash();
+
+            zoom = d3.zoom()
+                .scaleExtent([1, 3])
+                .on("zoom", function () {
+                    content.attr("transform", d3.event.transform)
+                });
+
+            content_group
+                .call(zoom);
+
         }
 
         function load_image(data){
