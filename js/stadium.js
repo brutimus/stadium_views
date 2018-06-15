@@ -16,7 +16,7 @@ function stadium() {
     var diagram_url = 'img/sections/{0}.png',
         photo_url = 'img/photos/{0}{1}{2}.jpg',
         mailto_url = 'mailto:?subject={0}&body={1}',
-        hash_re = new RegExp('^#([a-z0-9]+)-(\\d+)-(\\d+)$'),
+        hash_re = new RegExp('^#([a-z0-9]+)-(\\d*)-(\\d*)$'),
         section_metadata = {
             'a': {
                 'name': 'Section A',
@@ -479,7 +479,7 @@ function stadium() {
         }
 
         function activate_photo(section, row, seat) {
-            console.log('--> activate_photo()')
+            console.log('--> activate_photo()', section, row, seat)
             section_photoview = translate_seat_to_photo(section, row, seat);
             console.log('activate_photo().section_photoview: ', section_photoview);
             if (section_photoview == null) {
@@ -514,7 +514,7 @@ function stadium() {
                 var matches = hash_re.exec(hash),
                     section = matches[1],
                     row = matches[2],
-                    seat = parseInt(matches[3]);
+                    seat = matches[3];
                 container.select('#seat-selector #section').node().value = section;
                 view_section(section, row, seat);
                 activate_photo(section, row, seat);
@@ -527,7 +527,8 @@ function stadium() {
         }
         function write_url_hash(section, row, seat){
             // Writes the permalink hash to the URL
-            window.location.hash = section + '-' + row + '-' + seat;
+            console.log('write_url_hash: ', section, row, seat);
+            window.location.hash = section + '-' + row + '-' + seat||'';
         }
 
         function view_section(sec, row, seat){
