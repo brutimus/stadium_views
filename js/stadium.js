@@ -336,6 +336,12 @@ function stadium() {
                 'columns': 1,
                 'photos': [1]
             },
+            'boxbbdc': {
+                'name': 'Banner Bank Diamond Club',
+                'rows': 1,
+                'columns': 1,
+                'photos': [3]
+            },
 
         },
         error_state = false;
@@ -500,8 +506,14 @@ function stadium() {
         }
 
         function activate_view(view){
+            // Handles the overlay panel's view change button events. The value
+            // of view should be something like 'tl' or 'l' and this will 
+            // call up the correct photo depending.
             var section = container.select('#seat-selector #section').node().value;
-            do_activate_photo([section, view[0], view[1]]);
+            do_activate_photo([
+                section,
+                view.length == 1 ? '' : view[0],
+                view.length == 1 ? view[0] : view[1]]);
         }
 
         function read_url_hash(){
@@ -534,7 +546,8 @@ function stadium() {
         function view_section(sec, row, seat){
             // The main function that handles viewing a section. This is used by
             // many other parts of the code.
-            console.log(sec, row, seat);
+            console.log('view_section(): ', sec, row, seat);
+            if (!(sec in section_metadata)) return;
             var result = activate_photo(sec, row, seat);
             if (!result) {
                 show_error("Please select a valid seat");
@@ -562,7 +575,7 @@ function stadium() {
 
             switch (section_metadata[sec].photos.length) {
                 case 1:
-                    selector_y_options = []
+                    selector_y_options = ['']
                     break;
                 case 2:
                     selector_y_options = ['b', 't']
