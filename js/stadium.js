@@ -570,7 +570,7 @@ function stadium() {
             section_view_panel.select('.diagram img').attr('src', diagram_url.format(sec));
             section_view_panel.select('.title').text('Section ' + sec);
             section_view_panel.style('display', 'block');
-            jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
+            // jQuery('.viewSelector > div').css('height', (jQuery('.section-details').width() / 2) + 'px');
 
             //TODO: Fix this so that it can be variable, for this graphic all
             // sections have three columns.
